@@ -1,0 +1,7 @@
+.vscode/
+INPUT_DATA/
+OUTPUT_DATA/
+SPBR_DATA/
+*.o
+Makefile
+Makefile.kvs
