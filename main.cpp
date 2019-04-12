@@ -7,7 +7,6 @@
 #include <cstdlib>
 #include <vector>
 #include "importPointClouds.h"
-#include "writeSPBR.h"
 #include "divideRandomly.h"
 
 #include <kvs/PolygonObject>
@@ -54,21 +53,6 @@ int main( int argc, char** argv ) {
     //  STEP 3: Randomly, divide input data by the repeat level
     // =========================================================
     DivideRandomly *dr = new DivideRandomly( ply, repeat_level );
-
-    // ----- Write .spbr file -----
-    // WritingDataType type = Ascii;
-    // writeSPBR(  ply,                    /* kvs::PolygonObject *_ply        */  
-    //             outSPBRfile,            /* char*              _filename    */  
-    //             atof(argv[3]),          /* float              _correct_parameter */
-    //             type                    /* WritingDataType    _type        */
-    //         );    
-
-    
-    kvs::PointObject* object = new kvs::PointObject( *ply );
-    object->setSize( 1 );
-    object->updateMinMaxCoords(); 
-
-
 
     // ----- Exec. SPBR -----
     // std::string out_noised_spbr( outSPBRfile );
