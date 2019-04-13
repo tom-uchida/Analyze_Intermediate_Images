@@ -3,12 +3,14 @@
 
 #include "divideRandomly.h"
 #include "shuffle.h"
-#include "writeSPBR.h"
 
 // #include <cmath>
 // #include <vector>
 // #include <math.h>
 
+// default
+const float NORMAL[3]   = { 0.0, 0.0, 0.0 };
+const int   COLOR[3]    = { 255, 255, 255 };
 
 DivideRandomly::DivideRandomly( const kvs::PolygonObject* ply, const size_t repeat_level )
 {
@@ -16,11 +18,11 @@ DivideRandomly::DivideRandomly( const kvs::PolygonObject* ply, const size_t repe
 }
 
 void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size_t repeat_level ) {
-    size_t num_of_input_points = ply->numberOfVertices();
-    int num_of_points_in_each_ensamble = (int)num_of_input_points / (int)repeat_level;
+    const size_t num_of_input_points = ply->numberOfVertices();
+    const int num_of_points_in_each_ensemble = (int)num_of_input_points / (int)repeat_level;
     std::cout << "Num. of input points : " << num_of_input_points << std::endl;
     std::cout << "Repeat level         : " << repeat_level << std::endl;
-    std::cout << "Num. of points in each ensamble : " << num_of_points_in_each_ensamble << std::endl;
+    std::cout << "Num. of points in each ensemble : " << num_of_points_in_each_ensemble << std::endl;
 
     // Shuffle
     kvs::PointObject* object = new kvs::PointObject( *ply );
@@ -32,27 +34,70 @@ void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size
     bool hasColor  = false;
     if ( num_of_input_points == object->numberOfNormals() ) hasNormal   = true; 
     if ( num_of_input_points == object->numberOfColors() )  hasColor    = true;
-    kvs::ValueArray<kvs::Real32> coords        = object->coords();
-
-    // Divide
-    for ( size_t j = 0; j < repeat_level; j++ ) {
-        for ( size_t i = 0; i < num_of_points_in_each_ensamble; i++ ) {
-        }
-    }
+    kvs::ValueArray<kvs::Real32> coords     = object->coords();
+    kvs::ValueArray<kvs::Real32> normals    = object->normals();
+    kvs::ValueArray<kvs::UInt8>  colors     = object->colors();
 
     // Write to spbr file
     for ( size_t j = 0; j < repeat_level; j++ ) {
-        for ( size_t i = 0; i < num_of_points_in_each_ensamble; i++ ) {
-            std::string out_spbr_file_name = "OUTPUT_DATA/Ensamble";
-            std::ostringstream oss;
-            oss << j+1;
-            out_spbr_file_name += oss.str();
-            out_spbr_file_name += ".spbr";
+        // Set output file name
+        std::string out_spbr_file_name = "OUTPUT_DATA/Ensemble";
+        std::ostringstream oss;
+        oss << j+1;
+        out_spbr_file_name += oss.str();
+        out_spbr_file_name += ".spbr";
+        std::ofstream fout( out_spbr_file_name.c_str() );
             
-            writeSPBR(  /* kvs::PointObject* */ object,
-                        /* std::string       */ out_spbr_file_name,
-                        /* WritingDataType   */ Ascii );
+        // Set spbr parameter
+        fout << "#/SPBR_ASCII_Data"       << std::endl;
+        fout << "#/RepeatLevel 1"         << std::endl;
+        fout << "#/CameraPosition 0 0 8"  << std::endl;  
+        fout << "#/BGColorRGBByte 0 0 0"  << std::endl;
+        fout << "#/ImageResolution 1000"  << std::endl;
+        fout << "#/BoundingBox -0.05 -0.05 0 1.05 1.05 0" << std::endl;
+        fout << "#/Shading 0"             << std::endl;
+        fout << "#/EndHeader"             << std::endl;
 
+        for ( size_t i = 0; i < num_of_points_in_each_ensemble; i++ ) {
+            // coords
+            float x = coords[ j*num_of_points_in_each_ensemble + 3*i   ];
+            float y = coords[ j*num_of_points_in_each_ensemble + 3*i+1 ];
+            float z = coords[ j*num_of_points_in_each_ensemble + 3*i+2 ];
+
+            // normal(default)
+            float nx = NORMAL[0];
+            float ny = NORMAL[1];
+            float nz = NORMAL[2];
+            if ( hasNormal ) {
+                nx = normals[ j*num_of_points_in_each_ensemble + 3*i   ];
+                ny = normals[ j*num_of_points_in_each_ensemble + 3*i+1 ];
+                nz = normals[ j*num_of_points_in_each_ensemble + 3*i+2 ];
+            }
+
+            // color(default)
+            int r = COLOR[0];
+            int g = COLOR[1];
+            int b = COLOR[2];
+            if ( hasColor ) {
+                r = colors[ j*num_of_points_in_each_ensemble + 3*i   ];
+                g = colors[ j*num_of_points_in_each_ensemble + 3*i+1 ];
+                b = colors[ j*num_of_points_in_each_ensemble + 3*i+2 ];
+            }
+
+            fout    << x   << " " << y  << " " << z  << " "
+                    << nx  << " " << ny << " " << nz << " "
+                    << r   << " " << g  << " " << b  << " " 
+                    << std::endl;
+
+            
         } // end for
+
+        fout.close();
+
+        // Show progress
+        std::cout << "Ensemble " << j << " done." << std::endl;
     } // end for
+
+    std::cout << "File export of all ensembles is complete." << std::endl;
+
 } // End DoRandomDivision()
