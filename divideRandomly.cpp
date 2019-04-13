@@ -30,6 +30,7 @@ void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size
     object->setSize( 1 );
     object->updateMinMaxCoords();
 
+    // Reset
     bool hasNormal = false;
     bool hasColor  = false;
     if ( num_of_input_points == object->numberOfNormals() ) hasNormal   = true; 
@@ -41,7 +42,7 @@ void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size
     // Write to spbr file
     for ( size_t j = 0; j < repeat_level; j++ ) {
         // Set output file name
-        std::string out_spbr_file_name = "OUTPUT_DATA/Ensemble";
+        std::string out_spbr_file_name = "OUTPUT_DATA/LR100/ensemble";
         std::ostringstream oss;
         oss << j+1;
         out_spbr_file_name += oss.str();
@@ -51,27 +52,31 @@ void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size
         // Set spbr parameter
         fout << "#/SPBR_ASCII_Data"       << std::endl;
         fout << "#/RepeatLevel 1"         << std::endl;
-        fout << "#/CameraPosition 0 0 8"  << std::endl;  
         fout << "#/BGColorRGBByte 0 0 0"  << std::endl;
         fout << "#/ImageResolution 1000"  << std::endl;
-        fout << "#/BoundingBox -0.05 -0.05 0 1.05 1.05 0" << std::endl;
+        fout << "#/BoundingBox 0.15 0.15 0 0.85 0.85 0" << std::endl;
         fout << "#/Shading 0"             << std::endl;
         fout << "#/EndHeader"             << std::endl;
 
         for ( size_t i = 0; i < num_of_points_in_each_ensemble; i++ ) {
+            // if ( i == 0) std::cout << "ensamble" << j+1 << " : " << 3*j*num_of_points_in_each_ensemble + 3*i << std::endl;
+            // if ( i == 0) std::cout << "ensamble" << j+1 << " : " << 3*j*num_of_points_in_each_ensemble + 3*i+1 << std::endl;
+            // if ( i == 0) std::cout << "ensamble" << j+1 << " : " << 3*j*num_of_points_in_each_ensemble + 3*i+2 << std::endl;
+
+
             // coords
-            float x = coords[ j*num_of_points_in_each_ensemble + 3*i   ];
-            float y = coords[ j*num_of_points_in_each_ensemble + 3*i+1 ];
-            float z = coords[ j*num_of_points_in_each_ensemble + 3*i+2 ];
+            float x = coords[ 3*j*num_of_points_in_each_ensemble + 3*i   ];
+            float y = coords[ 3*j*num_of_points_in_each_ensemble + 3*i+1 ];
+            float z = coords[ 3*j*num_of_points_in_each_ensemble + 3*i+2 ];
 
             // normal(default)
             float nx = NORMAL[0];
             float ny = NORMAL[1];
             float nz = NORMAL[2];
             if ( hasNormal ) {
-                nx = normals[ j*num_of_points_in_each_ensemble + 3*i   ];
-                ny = normals[ j*num_of_points_in_each_ensemble + 3*i+1 ];
-                nz = normals[ j*num_of_points_in_each_ensemble + 3*i+2 ];
+                nx = normals[ 3*j*num_of_points_in_each_ensemble + 3*i   ];
+                ny = normals[ 3*j*num_of_points_in_each_ensemble + 3*i+1 ];
+                nz = normals[ 3*j*num_of_points_in_each_ensemble + 3*i+2 ];
             }
 
             // color(default)
@@ -79,9 +84,9 @@ void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size
             int g = COLOR[1];
             int b = COLOR[2];
             if ( hasColor ) {
-                r = colors[ j*num_of_points_in_each_ensemble + 3*i   ];
-                g = colors[ j*num_of_points_in_each_ensemble + 3*i+1 ];
-                b = colors[ j*num_of_points_in_each_ensemble + 3*i+2 ];
+                r = colors[ 3*j*num_of_points_in_each_ensemble + 3*i   ];
+                g = colors[ 3*j*num_of_points_in_each_ensemble + 3*i+1 ];
+                b = colors[ 3*j*num_of_points_in_each_ensemble + 3*i+2 ];
             }
 
             fout    << x   << " " << y  << " " << z  << " "
@@ -95,9 +100,9 @@ void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size
         fout.close();
 
         // Show progress
-        std::cout << "Ensemble " << j << " done." << std::endl;
+        std::cout << "Ensemble" << j+1 << " done." << std::endl;
     } // end for
 
-    std::cout << "File export of all ensembles is complete." << std::endl;
+    std::cout << "\nFile export of all ensembles is complete." << std::endl;
 
 } // End DoRandomDivision()
