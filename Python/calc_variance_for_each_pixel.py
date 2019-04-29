@@ -24,7 +24,7 @@ plt.rcParams["mathtext.rm"] = "Times New Roman"
 
 
 
-def ReadImage(_img_name):
+def ReadImage( _img_name ):
     # read input image
     img_BGR = cv2.imread(_img_name)
 
@@ -35,16 +35,62 @@ def ReadImage(_img_name):
 
 
 
-def ReadIntermediateImages(_repeat_level, _serial_img_path):
-    # Read input image
+def ReadIntermediateImages( _repeat_level, _image_size, _serial_img_path ):
+    # Prepare empty numpy array
+    intermediate_images = np.empty( (0, _image_size*3), np.uint8 )
+
+    # Read intermediate images
     for i in range( _repeat_level ):
-        intermediate_img_RGB = ReadImage( _serial_img_path + "ensemble"+str(i+1)+".bmp" )
+        tmp_image = ReadImage( _serial_img_path + "ensemble"+str(i+1)+".bmp" )
 
-    # print( type(intermediate_img_RGB) )
-    # <class 'numpy.ndarray'>
+        # Append to numpy array (https://qiita.com/fist0/items/d0779ff861356dafaf95)
+        intermediate_images = np.append( intermediate_images, tmp_image.reshape((1, _image_size*3)), axis=0 )
 
-    print("Input images (RGB)（height, width, channel）:", intermediate_img_RGB.shape)
-        
+        if i == _repeat_level-1:
+            print(intermediate_images.shape)
+
+    return intermediate_images
+
+
+
+def CalcVariance4EachPixel( _intermideate_images, _repeat_level, _image_size ):
+    # Prepare empty numpy array
+    R_pixel_values = np.empty( (0, _image_size*1), np.uint8 )
+    G_pixel_values = np.empty( (0, _image_size*1), np.uint8 )
+    B_pixel_values = np.empty( (0, _image_size*1), np.uint8 )
+
+    # Split into RGB
+    for i in range( _repeat_level ):
+        R_pixel_values = np.append( R_pixel_values, _intermideate_images[i, :_image_size].reshape((1, _image_size*1)), axis=0 )
+        G_pixel_values = np.append( G_pixel_values, _intermideate_images[i, _image_size:2*_image_size].reshape((1, _image_size*1)), axis=0 )
+        B_pixel_values = np.append( B_pixel_values, _intermideate_images[i, 2*_image_size:3*_image_size].reshape((1, _image_size*1)), axis=0 )
+
+    print(R_pixel_values.shape, G_pixel_values.shape, B_pixel_values.shape)
+
+    # Prepare empty numpy array
+    R_vars = np.empty( (0, _image_size*1), float )
+    G_vars = np.empty( (0, _image_size*1), float )
+    B_vars = np.empty( (0, _image_size*1), float )
+
+    # Calc variance for each pixel
+    for i in range( _image_size ):
+        # Background color is not counted
+        # if == bg_color:
+
+        # if i == 0:
+        #     print("var = ", np.var( R_pixel_values[:, i] ))
+
+        # Calc variance
+        R_vars = np.append( R_vars, np.var( R_pixel_values[:, i] ) )
+
+        # Show progress
+        if (i+1) % (_image_size*0.1) == 0:
+            print(i+1, "pixels done.")
+
+    print(R_vars.shape)
+
+    # Write to csv file
+    np.savetxt("OUT_DATA/R_vars.txt", R_vars, fmt='%.5f')
 
 # # Get statistical data of pixel value
 # def get_data_of_pixel_value(_img, _img_name):
@@ -59,13 +105,17 @@ def ReadIntermediateImages(_repeat_level, _serial_img_path):
 #   print("\nAverage :", _img[_img != 0].mean())
 #   print("S.D.  :", _img[_img != 0].std())
 #   print("\n")
-  
 #   return _img[_img != 0].mean()
 
 
 if __name__ == "__main__":
+    # Set repeat level
     repeat_level = 10
 
-    # Read images
-    ReadIntermediateImages( repeat_level, "../OUTPUT_DATA/LR"+str(repeat_level)+"/IMAGE_DATA/" )
-    
+    # Set image size
+    image_size = 1000**2
+
+    # Read intermediate images
+    intermediate_images = ReadIntermediateImages( repeat_level, image_size, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
+
+    CalcVariance4EachPixel( intermediate_images, repeat_level, image_size )
