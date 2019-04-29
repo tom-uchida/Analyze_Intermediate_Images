@@ -77,11 +77,16 @@ def CalcVariance4EachPixel( _intermideate_images, _repeat_level, _image_size ):
         # Background color is not counted
         # if == bg_color:
 
-        # if i == 0:
-        #     print("var = ", np.var( R_pixel_values[:, i] ))
+        if i == 0:
+            print("var = ", np.var( R_pixel_values[:, i] ))
+            print( np.var( R_pixel_values[:, i]) )
 
         # Calc variance
-        R_vars = np.append( R_vars, np.var( R_pixel_values[:, i] ) )
+        # R_vars = np.append( R_vars, np.var( R_pixel_values[:, i] ) )
+
+        if i <= 100:
+            mean = np.mean( R_pixel_values[:, i] )
+            print(mean)
 
         # Show progress
         if (i+1) % (_image_size*0.1) == 0:
