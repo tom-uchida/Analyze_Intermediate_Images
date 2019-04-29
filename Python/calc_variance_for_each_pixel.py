@@ -67,6 +67,27 @@ def CalcVariance4EachPixel( _intermideate_images, _repeat_level, _image_size ):
 
     print(R_pixel_values.shape, G_pixel_values.shape, B_pixel_values.shape)
 
+    # Check if each pixel is background color
+    bg_color_indices = np.empty( (_repeat_level, _image_size*1), bool )
+    
+    for r in range( _repeat_level ):
+        for i in range( _image_size ):
+            # BGColor (Black)
+            if R_pixel_values[r,i] == 0 and G_pixel_values[r,i] == 0 and B_pixel_values[r,i] == 0:
+                bg_color_indices[r][i] = False
+
+            # NOT BGColor
+            else:
+                bg_color_indices[r][i] = True
+
+    num_of_bgcolor = np.count_nonzero( bg_color_indices )
+    print("num_of_bgcolor =", num_of_bgcolor) # 995322 pixels
+
+    # Pixel color is the following 3 pattern
+    # White : (255, 255, 255)
+    # Red   : (255,   0,   0)
+    # Black : (  0,   0,   0) Background
+
     # Prepare empty numpy array
     R_vars = np.empty( (0, _image_size*1), float )
     G_vars = np.empty( (0, _image_size*1), float )
@@ -74,28 +95,48 @@ def CalcVariance4EachPixel( _intermideate_images, _repeat_level, _image_size ):
 
     # Calc variance for each pixel
     for i in range( _image_size ):
-        # Background color is not counted
-        # if == bg_color:
+        sum_R, sum_G, sum_B = 0, 0, 0
+        not_bg_color_counter = 0
 
-        if i == 0:
-            print("var = ", np.var( R_pixel_values[:, i] ))
-            print( np.var( R_pixel_values[:, i]) )
-
-        # Calc variance
-        # R_vars = np.append( R_vars, np.var( R_pixel_values[:, i] ) )
+        for r in range( _repeat_level ):
+            # IMPORTANT:
+            # Only when target pixel is NOT the background color
+            if bg_color_indices[r][i] == True:
+                sum_R += R_pixel_values[r, i]
+                sum_G += G_pixel_values[r, i]
+                sum_B += B_pixel_values[r, i]
+                not_bg_color_counter += 1
+        # end for
 
         if i <= 100:
-            mean = np.mean( R_pixel_values[:, i] )
-            print(mean)
+            print(not_bg_color_counter)
+            print(R_pixel_values[0, i])
+            print(G_pixel_values[0, i])
+            print(B_pixel_values[0, i])
 
         # Show progress
         if (i+1) % (_image_size*0.1) == 0:
             print(i+1, "pixels done.")
-
-    print(R_vars.shape)
+    # end for
 
     # Write to csv file
-    np.savetxt("OUT_DATA/R_vars.txt", R_vars, fmt='%.5f')
+    # np.savetxt("OUT_DATA/R_vars.txt", R_vars, fmt='%.5f')
+
+
+
+if __name__ == "__main__":
+    # Set repeat level
+    repeat_level = 10
+
+    # Set image size
+    image_size = 1000**2
+
+    # Read intermediate images
+    intermediate_images = ReadIntermediateImages( repeat_level, image_size, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
+
+    CalcVariance4EachPixel( intermediate_images, repeat_level, image_size )
+
+
 
 # # Get statistical data of pixel value
 # def get_data_of_pixel_value(_img, _img_name):
@@ -111,16 +152,3 @@ def CalcVariance4EachPixel( _intermideate_images, _repeat_level, _image_size ):
 #   print("S.D.  :", _img[_img != 0].std())
 #   print("\n")
 #   return _img[_img != 0].mean()
-
-
-if __name__ == "__main__":
-    # Set repeat level
-    repeat_level = 10
-
-    # Set image size
-    image_size = 1000**2
-
-    # Read intermediate images
-    intermediate_images = ReadIntermediateImages( repeat_level, image_size, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
-
-    CalcVariance4EachPixel( intermediate_images, repeat_level, image_size )
