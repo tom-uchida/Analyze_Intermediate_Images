@@ -83,6 +83,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     B_vars = np.empty( (_image_resol*1, _image_resol*1), float )
 
     # Calc variance for each pixel
+    print("\nCalc variance pixel by pixel ...")
     for h in range( _image_resol ):     # height
         for w in range( _image_resol ): # width
             # Initialize local variables
@@ -110,9 +111,6 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 # end if
             # end if
 
-            if (h == 500) & (w < 100):
-                print("M =", M)
-
             # Calc average
             if M != 0:
                 avg_R = sum_R / M
@@ -123,10 +121,17 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 avg2_G = sum2_G / M
                 avg2_B = sum2_B / M
 
+                var_R = avg2_R - (avg_R**2)
+                var_G = avg2_G - (avg_G**2)
+                var_B = avg2_B - (avg_B**2)
+
+                # if (h == _image_resol*0.5) & (w < _image_resol*0.5):
+                #     print( int(var_G) )
+
                 # Calc variance
-                R_vars[h,w] = avg2_R - (avg_R**2)
-                G_vars[h,w] = avg2_G - (avg_G**2)
-                B_vars[h,w] = avg2_B - (avg_B**2)
+                R_vars[h,w] = var_R / _repeat_level
+                G_vars[h,w] = var_G / _repeat_level
+                B_vars[h,w] = var_B / _repeat_level
 
             else:
                 R_vars[h,w] = 0
@@ -134,18 +139,23 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 B_vars[h,w] = 0
             # end if
 
+            # if (h == 300) & (w < 100):
+            #     print(R_vars[h,w])
+            #     print("M =", M)
+
+            # Show progress
+            if ((h*_image_resol+w)+1)%(_image_resol*_image_resol*0.1) == 0:
+                print((h*_image_resol+w)+1, "pixels done.")
+
             # end for
         # end for
 
-        # Show progress
-        if (w*h)%(_image_resol*10) == 0:
-            print(w*h, "pixels done.")
-    # end for
+    
 
     # Write to csv file
-    np.savetxt("OUT_DATA/R_vars.txt", R_vars, fmt='%.5f')
-    np.savetxt("OUT_DATA/G_vars.txt", G_vars, fmt='%.5f')
-    np.savetxt("OUT_DATA/B_vars.txt", B_vars, fmt='%.5f')
+    np.savetxt("OUT_DATA/R_vars.txt", R_vars, fmt='%d')
+    np.savetxt("OUT_DATA/G_vars.txt", G_vars, fmt='%d')
+    np.savetxt("OUT_DATA/B_vars.txt", B_vars, fmt='%d')
 
 
 
