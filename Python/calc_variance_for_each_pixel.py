@@ -35,45 +35,42 @@ def ReadImage( _img_name ):
 
 
 
-def ReadIntermediateImages( _repeat_level, _image_size, _serial_img_path ):
+def ReadIntermediateImages( _repeat_level, _image_resol, _serial_img_path ):
     # Prepare empty numpy array
-    intermediate_images = np.empty( (0, _image_size*3), np.uint8 )
+    R_pixel_values = np.empty( (_image_resol*1, _image_resol*1, _repeat_level), np.uint8 )
+    G_pixel_values = np.empty( (_image_resol*1, _image_resol*1, _repeat_level), np.uint8 )
+    B_pixel_values = np.empty( (_image_resol*1, _image_resol*1, _repeat_level), np.uint8 )
 
     # Read intermediate images
     for i in range( _repeat_level ):
-        tmp_image = ReadImage( _serial_img_path + "ensemble"+str(i+1)+".bmp" )
+        # Read each ensemble image
+        tmp_image_RGB = ReadImage( _serial_img_path + "ensemble"+str(i+1)+".bmp" )
 
-        # Append to numpy array (https://qiita.com/fist0/items/d0779ff861356dafaf95)
-        intermediate_images = np.append( intermediate_images, tmp_image.reshape((1, _image_size*3)), axis=0 )
+        # Split into RGB and add to numpy array
+        R_pixel_values[:,:,i] = tmp_image_RGB[:,:,0] # R
+        G_pixel_values[:,:,i] = tmp_image_RGB[:,:,1] # G
+        B_pixel_values[:,:,i] = tmp_image_RGB[:,:,2] # B
 
         if i == _repeat_level-1:
-            print(intermediate_images.shape)
+            print(R_pixel_values.shape, G_pixel_values.shape, B_pixel_values.shape)
 
-    return intermediate_images
+    return R_pixel_values, G_pixel_values, B_pixel_values
 
 
 
-def CalcVariance4EachPixel( _intermideate_images, _repeat_level, _image_size ):
+def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _repeat_level, _image_resol ):
     # Prepare empty numpy array
-    R_pixel_values = np.empty( (0, _image_size*1), np.uint8 )
-    G_pixel_values = np.empty( (0, _image_size*1), np.uint8 )
-    B_pixel_values = np.empty( (0, _image_size*1), np.uint8 )
-
-    # Split into RGB
-    for i in range( _repeat_level ):
-        R_pixel_values = np.append( R_pixel_values, _intermideate_images[i, :_image_size].reshape((1, _image_size*1)), axis=0 )
-        G_pixel_values = np.append( G_pixel_values, _intermideate_images[i, _image_size:2*_image_size].reshape((1, _image_size*1)), axis=0 )
-        B_pixel_values = np.append( B_pixel_values, _intermideate_images[i, 2*_image_size:3*_image_size].reshape((1, _image_size*1)), axis=0 )
-
-    print(R_pixel_values.shape, G_pixel_values.shape, B_pixel_values.shape)
+    bg_color_indices = np.empty( (_image_resol*1, _image_resol*1, _repeat_level), bool )
 
     # Check if each pixel is background color
-    bg_color_indices = np.empty( (_repeat_level, _image_size*1), bool )
-    
+    bg_color_indices = np.where(_R_pixel_values == _G_pixel_values == _B_pixel_values == 0)
+
+    #true or falseを返すやつを使う
+
     for r in range( _repeat_level ):
-        for i in range( _image_size ):
+        for i in range( _image_resol ):
             # BGColor (Black)
-            if R_pixel_values[r,i] == 0 and G_pixel_values[r,i] == 0 and B_pixel_values[r,i] == 0:
+            if _R_pixel_values[r,i] == 0 and _G_pixel_values[r,i] == 0 and _B_pixel_values[r,i] == 0:
                 bg_color_indices[r][i] = False
 
             # NOT BGColor
@@ -89,12 +86,12 @@ def CalcVariance4EachPixel( _intermideate_images, _repeat_level, _image_size ):
     # Black : (  0,   0,   0) Background
 
     # Prepare empty numpy array
-    R_vars = np.empty( (0, _image_size*1), float )
-    G_vars = np.empty( (0, _image_size*1), float )
-    B_vars = np.empty( (0, _image_size*1), float )
+    R_vars = np.empty( (0, _image_resol*1), float )
+    G_vars = np.empty( (0, _image_resol*1), float )
+    B_vars = np.empty( (0, _image_resol*1), float )
 
     # Calc variance for each pixel
-    for i in range( _image_size ):
+    for i in range( _image_resol ):
         sum_R, sum_G, sum_B = 0, 0, 0
         not_bg_color_counter = 0
 
@@ -102,20 +99,20 @@ def CalcVariance4EachPixel( _intermideate_images, _repeat_level, _image_size ):
             # IMPORTANT:
             # Only when target pixel is NOT the background color
             if bg_color_indices[r][i] == True:
-                sum_R += R_pixel_values[r, i]
-                sum_G += G_pixel_values[r, i]
-                sum_B += B_pixel_values[r, i]
+                sum_R += _R_pixel_values[r, i]
+                sum_G += _G_pixel_values[r, i]
+                sum_B += _B_pixel_values[r, i]
                 not_bg_color_counter += 1
         # end for
 
         if i <= 100:
             print(not_bg_color_counter)
-            print(R_pixel_values[0, i])
-            print(G_pixel_values[0, i])
-            print(B_pixel_values[0, i])
+            print(_R_pixel_values[0, i])
+            print(_G_pixel_values[0, i])
+            print(_B_pixel_values[0, i])
 
         # Show progress
-        if (i+1) % (_image_size*0.1) == 0:
+        if (i+1) % (_image_resol*0.1) == 0:
             print(i+1, "pixels done.")
     # end for
 
@@ -128,13 +125,13 @@ if __name__ == "__main__":
     # Set repeat level
     repeat_level = 10
 
-    # Set image size
-    image_size = 1000**2
+    # Set image resolution
+    image_resol = 1000
 
     # Read intermediate images
-    intermediate_images = ReadIntermediateImages( repeat_level, image_size, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
+    R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
 
-    CalcVariance4EachPixel( intermediate_images, repeat_level, image_size )
+    # CalcVariance4EachPixel( R_pixel_values, G_pixel_values, B_pixel_values, repeat_level, image_size )
 
 
 
