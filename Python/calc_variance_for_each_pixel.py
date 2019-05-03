@@ -1,4 +1,4 @@
-# L枚の中間画像に対して，対応するピクセルごとに分散を計算するプログラム
+# L枚の中間画像に対して，ピクセル単位で分散を計算するプログラム
 # 2019/04/14
 
 import numpy as np
@@ -52,7 +52,9 @@ def ReadIntermediateImages( _repeat_level, _image_resol, _serial_img_path ):
         B_pixel_values[:,:,i] = tmp_image_RGB[:,:,2] # B
 
         if i == _repeat_level-1:
-            print(R_pixel_values.shape, G_pixel_values.shape, B_pixel_values.shape)
+            print("R :", R_pixel_values.shape)
+            print("G :", G_pixel_values.shape)
+            print("B :", B_pixel_values.shape)
 
     return R_pixel_values, G_pixel_values, B_pixel_values
 
@@ -60,78 +62,108 @@ def ReadIntermediateImages( _repeat_level, _image_resol, _serial_img_path ):
 
 def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _repeat_level, _image_resol ):
     # Prepare empty numpy array
-    bg_color_indices = np.empty( (_image_resol*1, _image_resol*1, _repeat_level), bool )
+    #bg_color_indices = np.empty( (_image_resol*1, _image_resol*1, _repeat_level), bool )
 
     # Check if each pixel is background color
-    bg_color_indices = np.where(_R_pixel_values == _G_pixel_values == _B_pixel_values == 0)
-
-    #true or falseを返すやつを使う
-
-    for r in range( _repeat_level ):
-        for i in range( _image_resol ):
-            # BGColor (Black)
-            if _R_pixel_values[r,i] == 0 and _G_pixel_values[r,i] == 0 and _B_pixel_values[r,i] == 0:
-                bg_color_indices[r][i] = False
-
-            # NOT BGColor
-            else:
-                bg_color_indices[r][i] = True
-
+    # In this experiment environment,
+    #  if the R pixel value is 0, it is always the background color (black)
+    #  because pixel colors are the only following 3 pattern.
+    #   - White : (255, 255, 255)
+    #   - Red   : (255,   0,   0)
+    #   - Black : (  0,   0,   0) Background
+    bg_color_indices = (_R_pixel_values == 0) & (_G_pixel_values == 0) & (_B_pixel_values == 0)
     num_of_bgcolor = np.count_nonzero( bg_color_indices )
-    print("num_of_bgcolor =", num_of_bgcolor) # 995322 pixels
+    print("Num. of bgcolor pixels :", num_of_bgcolor)
 
-    # Pixel color is the following 3 pattern
-    # White : (255, 255, 255)
-    # Red   : (255,   0,   0)
-    # Black : (  0,   0,   0) Background
 
     # Prepare empty numpy array
-    R_vars = np.empty( (0, _image_resol*1), float )
-    G_vars = np.empty( (0, _image_resol*1), float )
-    B_vars = np.empty( (0, _image_resol*1), float )
+    # Variance image is a 2D array
+    R_vars = np.empty( (_image_resol*1, _image_resol*1), float )
+    G_vars = np.empty( (_image_resol*1, _image_resol*1), float )
+    B_vars = np.empty( (_image_resol*1, _image_resol*1), float )
 
     # Calc variance for each pixel
-    for i in range( _image_resol ):
-        sum_R, sum_G, sum_B = 0, 0, 0
-        not_bg_color_counter = 0
+    for h in range( _image_resol ):     # height
+        for w in range( _image_resol ): # width
+            # Initialize local variables
+            sum_R,   sum_G,  sum_B = 0, 0, 0
+            sum2_R, sum2_G, sum2_B = 0, 0, 0
+            avg_R,   avg_G,  avg_B = 0, 0, 0
+            avg2_R, avg2_G, avg2_B = 0, 0, 0
+            M = 0
 
-        for r in range( _repeat_level ):
-            # IMPORTANT:
-            # Only when target pixel is NOT the background color
-            if bg_color_indices[r][i] == True:
-                sum_R += _R_pixel_values[r, i]
-                sum_G += _G_pixel_values[r, i]
-                sum_B += _B_pixel_values[r, i]
-                not_bg_color_counter += 1
+            # Calc pixel by pixel
+            for r in range( _repeat_level ):
+                # DO NOT calc if the target pixel is background color
+                if _R_pixel_values[h,w,r] != 0:
+                    # Update value of M
+                    M += 1
+
+                    # Calc sum and sum2
+                    sum_R  += _R_pixel_values[h,w,r]
+                    sum_G  += _G_pixel_values[h,w,r]
+                    sum_B  += _B_pixel_values[h,w,r]
+
+                    sum2_R += _R_pixel_values[h,w,r] ** 2
+                    sum2_G += _G_pixel_values[h,w,r] ** 2
+                    sum2_B += _B_pixel_values[h,w,r] ** 2
+                # end if
+            # end if
+
+            if (h == 500) & (w < 100):
+                print("M =", M)
+
+            # Calc average
+            if M != 0:
+                avg_R = sum_R / M
+                avg_G = sum_G / M
+                avg_B = sum_B / M
+
+                avg2_R = sum2_R / M
+                avg2_G = sum2_G / M
+                avg2_B = sum2_B / M
+
+                # Calc variance
+                R_vars[h,w] = avg2_R - (avg_R**2)
+                G_vars[h,w] = avg2_G - (avg_G**2)
+                B_vars[h,w] = avg2_B - (avg_B**2)
+
+            else:
+                R_vars[h,w] = 0
+                G_vars[h,w] = 0
+                B_vars[h,w] = 0
+            # end if
+
+            # end for
         # end for
 
-        if i <= 100:
-            print(not_bg_color_counter)
-            print(_R_pixel_values[0, i])
-            print(_G_pixel_values[0, i])
-            print(_B_pixel_values[0, i])
-
         # Show progress
-        if (i+1) % (_image_resol*0.1) == 0:
-            print(i+1, "pixels done.")
+        if (w*h)%(_image_resol*10) == 0:
+            print(w*h, "pixels done.")
     # end for
 
     # Write to csv file
-    # np.savetxt("OUT_DATA/R_vars.txt", R_vars, fmt='%.5f')
+    np.savetxt("OUT_DATA/R_vars.txt", R_vars, fmt='%.5f')
+    np.savetxt("OUT_DATA/G_vars.txt", G_vars, fmt='%.5f')
+    np.savetxt("OUT_DATA/B_vars.txt", B_vars, fmt='%.5f')
 
 
 
 if __name__ == "__main__":
+    print("\n** Intermediate Images :")
+
     # Set repeat level
     repeat_level = 10
+    print("Repeat Level     :", repeat_level)
 
     # Set image resolution
     image_resol = 1000
+    print("Image Resolution :", image_resol)
 
     # Read intermediate images
     R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
 
-    # CalcVariance4EachPixel( R_pixel_values, G_pixel_values, B_pixel_values, repeat_level, image_size )
+    CalcVariance4EachPixel( R_pixel_values, G_pixel_values, B_pixel_values, repeat_level, image_resol )
 
 
 
