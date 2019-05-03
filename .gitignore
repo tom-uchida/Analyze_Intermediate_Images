@@ -2,7 +2,7 @@
 INPUT_DATA/
 OUTPUT_DATA/
 SPBR_DATA/
-Python/OUTPUT_DATA
+Python/OUTPUT_DATA/
 *.o
 Makefile
 Makefile.kvs

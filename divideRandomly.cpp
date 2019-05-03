@@ -42,7 +42,7 @@ void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size
     // Write to spbr file
     for ( size_t j = 0; j < repeat_level; j++ ) {
         // Set output file name
-        std::string out_spbr_file_name = "OUTPUT_DATA/LR100/ensemble";
+        std::string out_spbr_file_name = "OUTPUT_DATA/LR10/funehoko/ensemble";
         std::ostringstream oss;
         oss << j+1;
         out_spbr_file_name += oss.str();
@@ -54,7 +54,7 @@ void DivideRandomly::DoRandomDivision( const kvs::PolygonObject* ply, const size
         fout << "#/RepeatLevel 1"         << std::endl;
         fout << "#/BGColorRGBByte 0 0 0"  << std::endl;
         fout << "#/ImageResolution 1000"  << std::endl;
-        fout << "#/BoundingBox 0.15 0.15 0 0.85 0.85 0" << std::endl;
+        // fout << "#/BoundingBox 0.15 0.15 0 0.85 0.85 0" << std::endl;
         fout << "#/Shading 0"             << std::endl;
         fout << "#/EndHeader"             << std::endl;
 

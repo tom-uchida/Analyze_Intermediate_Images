@@ -54,11 +54,5 @@ int main( int argc, char** argv ) {
     // =========================================================
     DivideRandomly *dr = new DivideRandomly( ply, repeat_level );
 
-    // ----- Exec. SPBR -----
-    // std::string out_noised_spbr( outSPBRfile );
-    // std::string EXEC("spbr ");
-    // EXEC += out_noised_spbr;
-    // system( EXEC.c_str() );
-
     return 0;
 } // End main()
