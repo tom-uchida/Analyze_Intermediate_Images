@@ -139,6 +139,8 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 G_vars[h,w] = np.sqrt( var_G / _repeat_level )
                 B_vars[h,w] = np.sqrt( var_B / _repeat_level )
 
+            # M = 0
+            # If target pixel color is background color
             else:
                 R_vars[h,w] = -1
                 G_vars[h,w] = -1
@@ -155,9 +157,9 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     
 
     # Write to csv file
-    np.savetxt("OUT_DATA/R_vars.txt", R_vars, fmt='%d')
-    np.savetxt("OUT_DATA/G_vars.txt", G_vars, fmt='%d')
-    np.savetxt("OUT_DATA/B_vars.txt", B_vars, fmt='%d')
+    np.savetxt("OUTPUT_DATA/R_vars.txt", R_vars, fmt='%d')
+    np.savetxt("OUTPUT_DATA/G_vars.txt", G_vars, fmt='%d')
+    np.savetxt("OUTPUT_DATA/B_vars.txt", B_vars, fmt='%d')
 
 
 
@@ -174,25 +176,7 @@ if __name__ == "__main__":
 
     # Read intermediate images
     serial_img_path = args[1]
-    # R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
     R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, serial_img_path )
 
 
     CalcVariance4EachPixel( R_pixel_values, G_pixel_values, B_pixel_values, repeat_level, image_resol )
-
-
-
-# # Get statistical data of pixel value
-# def get_data_of_pixel_value(_img, _img_name):
-#   print("===== Statistical Data of", _img_name, "(Gray) =====")
-#   print("Num of pixel values (== 255) :", np.sum(_img == 255))
-#   print("Num of pixel values (<= 1) :", np.sum(_img <= 1))
-#   print("Num of pixel values (== 0)   :", np.sum(_img == 0) )
-#   print("\nMax :", np.max(_img))
-#   print("Min :", np.min(_img))
-#   #print("\nAverage :", np.mean(_img))
-#   #print("Median  :", np.median(_img))
-#   print("\nAverage :", _img[_img != 0].mean())
-#   print("S.D.  :", _img[_img != 0].std())
-#   print("\n")
-#   return _img[_img != 0].mean()
