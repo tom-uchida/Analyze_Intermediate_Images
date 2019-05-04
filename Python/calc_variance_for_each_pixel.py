@@ -1,5 +1,6 @@
-# L枚の中間画像に対して，ピクセル単位で分散を計算するプログラム
-# 2019/04/14
+# calc_variance_for_each_pixel.py
+#   Tomomasa Uchida
+#   2019/05/04
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -7,10 +8,7 @@ from matplotlib import cycler
 import matplotlib.gridspec as gridspec
 import matplotlib.patches as pat
 import cv2
-import subprocess
-import sys
 import statistics
-import time
 
 # Graph settings
 plt.style.use('seaborn-white')
@@ -21,6 +19,14 @@ plt.rc('patch', edgecolor='#E6E6E6')
 plt.rc('lines', linewidth=2)
 plt.rcParams["mathtext.fontset"] = "stix"
 plt.rcParams["mathtext.rm"] = "Times New Roman"
+
+# Check arguments
+import sys
+args = sys.argv
+if len(args) != 2:
+    print("\nUSAGE   : $ python calc_variance_for_each_pixel.py [input_images_path]")
+    print("EXAMPLE : $ python calc_variance_for_each_pixel.py OUTPUT/LR10/IMAGE_DATA/")
+    sys.exit()
 
 
 
@@ -129,19 +135,15 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 #     print( int(var_G) )
 
                 # Calc variance
-                R_vars[h,w] = var_R / _repeat_level
-                G_vars[h,w] = var_G / _repeat_level
-                B_vars[h,w] = var_B / _repeat_level
+                R_vars[h,w] = np.sqrt( var_R / _repeat_level )
+                G_vars[h,w] = np.sqrt( var_G / _repeat_level )
+                B_vars[h,w] = np.sqrt( var_B / _repeat_level )
 
             else:
-                R_vars[h,w] = 0
-                G_vars[h,w] = 0
-                B_vars[h,w] = 0
+                R_vars[h,w] = -1
+                G_vars[h,w] = -1
+                B_vars[h,w] = -1
             # end if
-
-            # if (h == 300) & (w < 100):
-            #     print(R_vars[h,w])
-            #     print("M =", M)
 
             # Show progress
             if ((h*_image_resol+w)+1)%(_image_resol*_image_resol*0.1) == 0:
@@ -167,11 +169,14 @@ if __name__ == "__main__":
     print("Repeat Level     :", repeat_level)
 
     # Set image resolution
-    image_resol = 1000
+    image_resol = 800
     print("Image Resolution :", image_resol)
 
     # Read intermediate images
-    R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
+    serial_img_path = args[1]
+    # R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, "../OUTPUT_DATA/LR"+str(repeat_level)+"/sigma2_1e-05/IMAGE_DATA/" )
+    R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, serial_img_path )
+
 
     CalcVariance4EachPixel( R_pixel_values, G_pixel_values, B_pixel_values, repeat_level, image_resol )
 
