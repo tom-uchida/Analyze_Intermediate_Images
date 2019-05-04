@@ -47,5 +47,5 @@ $ ./analyzeIntermediateImages input.ply OUTPUT_DATA/LR10/
 ![10](resources/ensemble10.bmp)
 
 
-## $L=10$ (above ten ensembles)
+## L=10 (average image of ten ensemble images)
 ![10](resources/ten_ensembles.bmp)
