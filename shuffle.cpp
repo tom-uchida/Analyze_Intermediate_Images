@@ -21,46 +21,47 @@ kvs::PointObject* Shuffle::exec( const kvs::ObjectBase* object )
     const kvs::PointObject* point = kvs::PointObject::DownCast( object );
 
     // Get the number of points in the PointObject.
-    //    const size_t npoints = point->nvertices(); // KVS1
-    const size_t npoints = point->numberOfVertices(); // KVS2
+    const size_t npoints = point->numberOfVertices();
 
-    // Create shuffled indices for temporal arrays
-    kvs::ValueArray<int> index( npoints ); // We need npoints indeces.
+    // Create shuffled indices for temporary arrays
+    kvs::ValueArray<int> index( npoints ); // We need npoints indices.
     for ( size_t i = 0; i < npoints; i++ ) index[i] = static_cast<int>( i );
     std::random_shuffle( index.begin(), index.end() );
 
     // Create the shuffled "coords" array.
     {
-      // Temporary array for coords (initialized to empty)
-      //   x0 y0 z0 x1 y1 z1 x2 y2 z2 ... 
-      kvs::ValueArray<kvs::Real32> coords( npoints * 3 ); 
+        // Temporary array for coords (initialized to empty)
+        //   x0 y0 z0 x1 y1 z1 x2 y2 z2 ... 
+        kvs::ValueArray<kvs::Real32> shuffled_coords( npoints * 3 ); 
 
-      // Define a pointer to an element of the array. 
-      //   It is initialized to &(coords[0]).
-      kvs::Real32* pcoords = coords.pointer(); 
+        // Define a pointer to an element of the array. 
+        //   It is initialized to &(coords[0]).
+        kvs::Real32* pcoords = shuffled_coords.pointer(); 
 
-      // Set coords of the index[i]-th point 
-      //   as the i-th elemeht of the array.
-      for ( size_t i = 0; i < npoints; i++ )
-      {
         // Set coords of the index[i]-th point 
-        //   as the i-th elemeht of the array
-        const kvs::Vector3f v = point->coord( index[i] );
-        *(pcoords++) = v.x();
-        *(pcoords++) = v.y();
-        *(pcoords++) = v.z();
-      }
+        //   as the i-th elemeht of the array.
+        for ( size_t i = 0; i < npoints; i++ ) {
+            // Set coords of the index[i]-th point 
+            //   as the i-th elemeht of the array
 
-      // Replace coords of the point object with suffled result
-      setCoords( coords ); 
+            // Get one point(Vector3f) using shuffled index
+            const kvs::Vector3f v = point->coord( index[i] );
+
+            // Replace
+            *(pcoords++) = v.x();
+            *(pcoords++) = v.y();
+            *(pcoords++) = v.z();
+        }
+
+        // Replace coords of the point object with suffled result
+        this->setCoords( shuffled_coords );
+        // std::cout << "test : " << this->coord(0) << std::endl;
     }
 
 
     // Create the shuffled color array.
-    //    if ( point->ncolors() == 1 ) setColor( point->color() );//KVS1
-    //    else if ( point->ncolors() > 1 )                        //KVS1
-    if ( point->numberOfColors() == 1 ) setColor( point->color() );//KVS2
-    else if ( point->numberOfColors() > 1 )                       //KVS2 
+    if ( point->numberOfColors() == 1 ) setColor( point->color() );
+    else if ( point->numberOfColors() > 1 )
     {
         // Temporary array for colors (initialized to empty)
         //   r0 g0 b0 r1 g1 b1 r2 g2 b2 ... 
@@ -81,18 +82,17 @@ kvs::PointObject* Shuffle::exec( const kvs::ObjectBase* object )
         }
 
         // Replace colors of the point object with suffled result
-        setColors( colors );
+        this->setColors( colors );
     }
 
 
     // Create the shuffled surface normal array.
-    //    if ( point->nnormals() > 1 )  // KVS1 
-    if ( point->numberOfNormals() > 1 ) // KVS2
+    if ( point->numberOfNormals() > 1 )
     {
         // Temporary array for normals (initialized to empty)
         //   nx0 ny0 nz0 nx1 ny1 nz1 nx2 ny2 nz2 ... 
         kvs::ValueArray<kvs::Real32> normals( npoints * 3 );
-                                         
+
         // Define a pointer to an element of the array. 
         //   It is initialized to &(normals[0]).
         kvs::Real32* pnormals = normals.pointer(); 
@@ -108,22 +108,19 @@ kvs::PointObject* Shuffle::exec( const kvs::ObjectBase* object )
         }
 
         // Replace normals of the point object with suffled result
-        setNormals( normals );
+        this->setNormals( normals );
     }
 
-    //?????
-    //    setSize( 1 );
+    this->setSize( 1 );
 
     // Copy the original bounding-box information to the shuffled point set
-    setMinMaxObjectCoords  ( point->minObjectCoord(), 
-                             point->maxObjectCoord()   );
-    setMinMaxExternalCoords( point->minExternalCoord(), 
-                             point->maxExternalCoord() );
+    this->setMinMaxObjectCoords   (   point->minObjectCoord(), 
+                                point->maxObjectCoord()   );
+    this->setMinMaxExternalCoords (   point->minExternalCoord(), 
+                                point->maxExternalCoord() );
 
     // EndFn
     return( this );
-
-}// exec()
+} // exec()
 
 // end of shuffle.cpp
-

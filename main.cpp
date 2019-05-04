@@ -17,19 +17,19 @@
 #include <kvs/PointRenderer> 
 #include <kvs/Coordinate> 
 
-const char OUT_FILE[] = "SPBR_DATA/output.spbr";
+const char OUT_FILE_PATH[] = "OUTPUT_DATA/LR10/";
 
 int main( int argc, char** argv ) {
-    char outSPBRfile[512];
-    strcpy( outSPBRfile, OUT_FILE );
+    char out_file_path[512];
+    strcpy( out_file_path, OUT_FILE_PATH );
 
-    if ( argc != 2 ) {
-        std::cout   << "\nUSAGE   : "    << argv[0] << " [input_file]\n"
-                    << "Example : "      << argv[0] << " input.ply\n" << std::endl;
+    if ( argc != 3 ) {
+        std::cout   << "\nUSAGE   : "    << argv[0] << " [input_file] [output_path]\n"
+                    << "Example : "      << argv[0] << " input.ply OUTPUT_DATA/LR10/\n" << std::endl;
         exit(1);
 
-    } else if ( argc >= 3) {
-        strcpy( outSPBRfile, argv[2] );
+    } else if ( argc == 3) {
+        strcpy( out_file_path, argv[2] );
     }
     
     // =========================
@@ -49,10 +49,12 @@ int main( int argc, char** argv ) {
     std::cout   << ") : "; 
     std::cin    >> repeat_level;
 
-    // =========================================================
-    //  STEP 3: Randomly, divide input data by the repeat level
-    // =========================================================
+    // ===============================================================
+    //  STEP 3: Randomly, divide input point data by the repeat level
+    // ===============================================================
     DivideRandomly *dr = new DivideRandomly( ply, repeat_level );
+    dr->shuffle();
+    dr->writeToSPBRFile( out_file_path );
 
     return 0;
 } // End main()
