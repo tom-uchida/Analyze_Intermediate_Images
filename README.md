@@ -17,35 +17,35 @@ $ ./analyzeIntermediateImages input.ply OUTPUT_DATA/LR10/
 ## Intermediate Images
 
 ### ensemble1
-![1](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble1.bmp)
+![1](resources/ensemble1.bmp)
 
 ### ensemble2
-![2](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble2.bmp)
+![2](resources/ensemble2.bmp)
 
 ### ensemble3
-![3](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble3.bmp)
+![3](resources/ensemble3.bmp)
 
 ### ensemble4
-![4](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble4.bmp)
+![4](resources/ensemble4.bmp)
 
 ### ensemble5
-![5](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble5.bmp)
+![5](resources/ensemble5.bmp)
 
 ### ensemble6
-![6](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble6.bmp)
+![6](resources/ensemble6.bmp)
 
 ### ensemble7
-![7](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble7.bmp)
+![7](resources/ensemble7.bmp)
 
 ### ensemble8
-![8](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble8.bmp)
+![8](resources/ensemble8.bmp)
 
 ### ensemble9
-![9](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble9.bmp)
+![9](resources/ensemble9.bmp)
 
 ### ensemble10
-![10](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ensemble10.bmp)
+![10](resources/ensemble10.bmp)
 
 
 ## $L=10$ (above ten ensembles)
-![10](OUTPUT_DATA/LR10/funehoko/IMAGE_DATA/ten_ensembles.bmp)
+![10](resources/ten_ensembles.bmp)
