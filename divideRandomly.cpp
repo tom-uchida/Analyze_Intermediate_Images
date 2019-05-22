@@ -23,7 +23,7 @@ DivideRandomly::DivideRandomly( const kvs::PolygonObject* _ply, const size_t _re
 void DivideRandomly::shuffle() {
     // kvs::PointObject* point = new kvs::PointObject( *m_ply );
     m_point = new kvs::PointObject( *m_ply );
-    std::cout << "Before    : " << m_point->coord( 0 ) << std::endl;
+    // std::cout << "Before    : " << m_point->coord( 0 ) << std::endl;
 
     // Get the number of points in the PointObject.
     const size_t npoints = m_point->numberOfVertices();
@@ -63,8 +63,7 @@ void DivideRandomly::shuffle() {
         // std::cout << "test : " << this->coord(0) << std::endl;
     }
 
-    std::cout << "After     : " << m_point->coord( 0 ) << std::endl;
-
+    // std::cout << "After     : " << m_point->coord( 0 ) << std::endl;
 
     // Create the shuffled color array.
     if ( m_point->numberOfColors() == 1 ) m_point->setColor( m_point->color() );

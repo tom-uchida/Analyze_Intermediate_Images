@@ -3,11 +3,11 @@
 <br>
 
 ### Algorithm
-#### Step1 : Create the shuffled indices array
-#### Step2 : Create the shuffled coords array
-#### Step3 : Define a pointer to array(created in Step2)
-#### Step4 : Get one point(Vector3f) using shuffled indices array(created in Step1)
-#### Step5 : Replace point(got in Step4) using pointer(defined in Step3)
+#### Step1 : Create shuffled indices array
+#### Step2 : Create an empty array to store shuffled coordinates
+#### Step3 : Define a pointer to the empty array(created in Step2)
+#### Step4 : Get one point(Vector3f) using the shuffled indices array(created in Step1)
+#### Step5 : Replace the point(got in Step4) using the pointer(defined in Step3)
 
 <br>
 

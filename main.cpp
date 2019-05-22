@@ -54,6 +54,7 @@ int main( int argc, char** argv ) {
     // ===============================================================
     DivideRandomly *dr = new DivideRandomly( ply, repeat_level );
     dr->shuffle();
+    std::cout   << "\nShuffled." << std::endl;
     dr->writeToSPBRFile( out_file_path );
 
     return 0;
