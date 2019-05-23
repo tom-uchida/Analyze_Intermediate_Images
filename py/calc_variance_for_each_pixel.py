@@ -25,7 +25,7 @@ import sys
 args = sys.argv
 if len(args) != 4:
     print("\nUSAGE   : $ python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image_resolution]")
-    print("EXAMPLE : $ python calc_variance_for_each_pixel.py OUTPUT/LR100/IMAGE_DATA/ 100 1000")
+    print("EXAMPLE : $ python calc_variance_for_each_pixel.py ../OUTPUT/LR100/IMAGE_DATA/ 100 1000\n")
     sys.exit()
 
 
@@ -149,7 +149,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
 
             # Show progress
             if ((h*_image_resol+w)+1)%(_image_resol*_image_resol*0.1) == 0:
-                print((h*_image_resol+w)+1, "pixels done.")
+                print(" ", (h*_image_resol+w)+1, "pixels done.")
 
             # end for w
         # end for h
@@ -160,8 +160,13 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     np.savetxt("OUTPUT_DATA/B_vars.txt", B_vars, fmt='%d')
 
     # RGB各配列を重ねて，軸を指定して平均を求める
-    # np.mean()
-    # result_avg_image = np.empty( (_image_resol, _image_resol), float )
+    RGB_vars = np.array([R_vars, G_vars, B_vars])
+    RGB_vars_mean = np.mean(RGB_vars, axis=0)
+    #result_image = (result_image / np.max(result_image)) * 255
+    plt.figure(figsize=(6, 6))
+    plt.imshow( RGB_vars_mean, cmap='viridis' )
+    plt.colorbar(shrink=0.9, orientation='horizontal')
+    plt.savefig("OUTPUT_DATA/result.png")
 
 
 
@@ -169,15 +174,15 @@ if __name__ == "__main__":
     print("\n** Intermediate Images :")
 
     # Set repeat level
-    repeat_level = args[2]
+    repeat_level = int(args[2])
     print("Repeat Level     :", repeat_level)
 
     # Set image resolution
-    image_resol = args[3]
+    image_resol = int(args[3])
     print("Image Resolution :", image_resol)
 
     # Read intermediate images
-    serial_img_path = args[1]
+    serial_img_path = args[1] + "/"
     R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, serial_img_path )
 
 
