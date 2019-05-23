@@ -23,9 +23,9 @@ plt.rcParams["mathtext.rm"] = "Times New Roman"
 # Check arguments
 import sys
 args = sys.argv
-if len(args) != 2:
-    print("\nUSAGE   : $ python calc_variance_for_each_pixel.py [input_images_path]")
-    print("EXAMPLE : $ python calc_variance_for_each_pixel.py OUTPUT/LR10/IMAGE_DATA/")
+if len(args) != 4:
+    print("\nUSAGE   : $ python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image_resolution]")
+    print("EXAMPLE : $ python calc_variance_for_each_pixel.py OUTPUT/LR100/IMAGE_DATA/ 100 1000")
     sys.exit()
 
 
@@ -115,7 +115,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                     sum2_G += _G_pixel_values[h,w,r] ** 2
                     sum2_B += _B_pixel_values[h,w,r] ** 2
                 # end if
-            # end if
+            # end for r
 
             # Calc average
             if M != 0:
@@ -142,24 +142,26 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
             # M = 0
             # If target pixel color is background color
             else:
-                R_vars[h,w] = -1
-                G_vars[h,w] = -1
-                B_vars[h,w] = -1
+                R_vars[h,w] = 0
+                G_vars[h,w] = 0
+                B_vars[h,w] = 0
             # end if
 
             # Show progress
             if ((h*_image_resol+w)+1)%(_image_resol*_image_resol*0.1) == 0:
                 print((h*_image_resol+w)+1, "pixels done.")
 
-            # end for
-        # end for
-
-    
+            # end for w
+        # end for h
 
     # Write to csv file
     np.savetxt("OUTPUT_DATA/R_vars.txt", R_vars, fmt='%d')
     np.savetxt("OUTPUT_DATA/G_vars.txt", G_vars, fmt='%d')
     np.savetxt("OUTPUT_DATA/B_vars.txt", B_vars, fmt='%d')
+
+    # RGB各配列を重ねて，軸を指定して平均を求める
+    # np.mean()
+    # result_avg_image = np.empty( (_image_resol, _image_resol), float )
 
 
 
@@ -167,11 +169,11 @@ if __name__ == "__main__":
     print("\n** Intermediate Images :")
 
     # Set repeat level
-    repeat_level = 10
+    repeat_level = args[2]
     print("Repeat Level     :", repeat_level)
 
     # Set image resolution
-    image_resol = 800
+    image_resol = args[3]
     print("Image Resolution :", image_resol)
 
     # Read intermediate images
