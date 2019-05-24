@@ -82,8 +82,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     #   - Black : (  0,   0,   0) Background
     bg_color_indices = (_R_pixel_values == bg_color) & (_G_pixel_values == bg_color) & (_B_pixel_values == bg_color)
     num_of_bgcolor = np.count_nonzero( bg_color_indices )
-    print("Num. of bgcolor pixels              :", num_of_bgcolor)
-    print("(Avg num. included in each ensemble):", int(num_of_bgcolor / _repeat_level))
+    print("(Avg num of bgcolor pixels included in each ensemble) :", int(num_of_bgcolor / _repeat_level), "(pixels)")
 
     # Prepare empty numpy array
     # Variance(or S.D.) image is a 2D array
@@ -189,7 +188,7 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor):
     print("\nsd_mean :", sd_mean)
     print("sd_max  :", sd_max, "\n")
 
-    fig = plt.figure(figsize=(5, 8)) # figsize=(width, height)
+    fig = plt.figure(figsize=(6, 10)) # figsize=(width, height)
     gs  = gridspec.GridSpec(2,1)
 
     # SD image
@@ -209,11 +208,11 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor):
     # Histogram
     ax2 = fig.add_subplot(gs[1,0])
     ax2.set_title('SD histogram')
-    ax2.hist(_RGB_sd_mean_non_bgcolor.ravel(), bins=50, color='black')
+    ax2.hist(_RGB_sd_mean_non_bgcolor.ravel(), bins=30, color='black')
     hist, bins = np.histogram(_RGB_sd_mean_non_bgcolor, 50)
-    ax2.axvline(sd_mean, color='white')
+    ax2.axvline(sd_mean, color='red')
     text = "mean:\n" + str(round(sd_mean,2))
-    ax2.text(sd_mean+0.2, max(hist)*0.4, text, color='white', fontsize='14')
+    ax2.text(sd_mean+0.1, max(hist)*0.4, text, color='red', fontsize='16')
 
     # plt.figure(figsize=(8, 8))
     # plt.imshow( RGB_sd_mean, cmap='viridis' )
