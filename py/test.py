@@ -20,3 +20,17 @@ print(np.mean(c, axis=0))
 # [[5. 5. 5.]
 #  [5. 5. 5.]
 #  [5. 5. 5.]]
+
+
+d = a == 1
+print(d)
+# [[ True False False]
+#  [False False False]
+#  [False False False]]
+
+
+a = np.array( [ [0, 0, 0],
+                [0, 9, 0],
+                [8, 1, 0]] )
+a_mean_non_zero = np.mean(a[a != 0])
+print(a_mean_non_zero)
