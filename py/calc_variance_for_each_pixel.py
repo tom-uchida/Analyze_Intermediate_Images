@@ -182,7 +182,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
 
 
 
-def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor):
+def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol):
     sd_mean = np.mean(_RGB_sd_mean_non_bgcolor)
     sd_max  = np.max(_RGB_sd_mean_non_bgcolor)
     print("\nsd_mean :", sd_mean)
@@ -208,11 +208,18 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor):
     # Histogram
     ax2 = fig.add_subplot(gs[1,0])
     ax2.set_title('SD histogram')
-    ax2.hist(_RGB_sd_mean_non_bgcolor.ravel(), bins=30, color='black')
+    ax2.hist(_RGB_sd_mean_non_bgcolor.ravel(), bins=50, color='black')
     hist, bins = np.histogram(_RGB_sd_mean_non_bgcolor, 50)
+
+    # Show SD mean
     ax2.axvline(sd_mean, color='red')
-    text = "mean:\n" + str(round(sd_mean,2))
-    ax2.text(sd_mean+0.1, max(hist)*0.4, text, color='red', fontsize='16')
+    text = "mean :\n" + str(round(sd_mean,2))
+    ax2.text(sd_mean-sd_mean*0.1, max(hist)*0.9, text, color='red', fontsize='16')
+
+    # Show SD max
+    ax2.axvline(sd_max, color='blue')
+    text = "max :\n" + str(round(sd_max,2))
+    ax2.text(sd_max-sd_mean*0.1, max(hist)*0.9, text, color='blue', fontsize='16')
 
     # plt.figure(figsize=(8, 8))
     # plt.imshow( RGB_sd_mean, cmap='viridis' )
@@ -240,4 +247,4 @@ if __name__ == "__main__":
     RGB_sd_mean, RGB_sd_mean_non_bgcolor= CalcVariance4EachPixel( R_pixel_values, G_pixel_values, B_pixel_values, repeat_level, image_resol )
 
     # Create figure
-    CreateFigure(RGB_sd_mean, RGB_sd_mean_non_bgcolor)
+    CreateFigure(RGB_sd_mean, RGB_sd_mean_non_bgcolor, image_resol)
