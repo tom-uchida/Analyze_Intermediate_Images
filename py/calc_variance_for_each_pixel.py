@@ -224,12 +224,12 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol):
     # Show SD mean
     ax2.axvline(sd_mean, color='red')
     text = "mean :\n" + str(round(sd_mean,2))
-    ax2.text(sd_mean-sd_mean*0.1, max(hist)*0.9, text, color='red', fontsize='16')
+    ax2.text(sd_mean, max(hist)*0.9, text, color='red', fontsize='16')
 
     # Show SD max
     ax2.axvline(sd_max, color='blue')
     text = "max :\n" + str(round(sd_max,2))
-    ax2.text(sd_max-sd_mean*0.1, max(hist)*0.9, text, color='blue', fontsize='16')
+    ax2.text(sd_max, max(hist)*0.9, text, color='blue', fontsize='16')
 
     # plt.figure(figsize=(8, 8))
     # plt.imshow( RGB_sd_mean, cmap='viridis' )
