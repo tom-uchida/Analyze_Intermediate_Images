@@ -67,6 +67,9 @@ def ReadIntermediateImages( _repeat_level, _image_resol, _serial_img_path ):
 
 
 def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _repeat_level, _image_resol ):
+    # Set repeat level
+    L = _repeat_level
+    
     # Set back ground color
     bg_color = 0
 
@@ -104,7 +107,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
             M = 0
 
             # Calc variance for each corresponding pixel
-            for r in range( _repeat_level ):
+            for r in range( L ):
                 # NOTE: DO NOT include if the target pixel is background color
                 if bg_color_indices[h,w,r] != True: # True: bg_color
                     # Update value of M
@@ -143,9 +146,16 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 #     print( int(var_G) )
 
                 # Calc sigma max
-                R_sigma_max = var_R / _repeat_level
-                G_sigma_max = var_G / _repeat_level
-                B_sigma_max = var_B / _repeat_level
+                # NOTE: L or LM or L^2
+                # R_sigma_max = var_R / L
+                # G_sigma_max = var_G / L
+                # B_sigma_max = var_B / L
+                # R_sigma_max = var_R / (L*M)
+                # G_sigma_max = var_G / (L*M)
+                # B_sigma_max = var_B / (L*M)
+                R_sigma_max = var_R / (L**2)
+                G_sigma_max = var_G / (L**2)
+                B_sigma_max = var_B / (L**2)
 
                 # Calc standard deviation
                 R_sd[h,w] = np.sqrt( R_sigma_max )
