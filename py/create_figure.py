@@ -41,8 +41,8 @@ sd_max  = sd_mean_max[:,2]
 
 # Creat figure
 # plt.plot(LR, NMSE, color='black')
-plt.scatter(L, sd_mean, color='black', label='mean')
-plt.scatter(L, sd_max, color='red', label='max')
+# plt.scatter(L, sd_mean, color='black', label='mean')
+plt.scatter(L, sd_max, color='black', label='max')
 
 plt.rcParams["mathtext.fontset"] = "stix"
 plt.rcParams["mathtext.rm"] = "Times New Roman"
@@ -63,10 +63,10 @@ plt.ylabel('standard deviation', fontsize=14) # Gray scale
 
 plt.xticks([2, 50, 100, 150], fontsize=14)
 # #plt.xticks([0, 10, 100])
-plt.yticks([0, 1, 5, 10, 15], fontsize=14)
+plt.yticks([1, 20, 40, 60], fontsize=14)
 # #plt.ylim([0, 275])
 
 plt.grid()
-plt.legend(fontsize=14)
+# plt.legend(fontsize=14)
 
 plt.show()

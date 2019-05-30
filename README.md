@@ -1,32 +1,35 @@
 # Analyze_Intermediate_Images
 
 ## Overview
-1. Create ensemble point clouds(.spbr) from one input point cloud
-2. Snapshot all intermediate images automatically by using spbr_auto_snap
-3. Calculate variance(or SD) for each corresponding pixel
-
-### Usage
+#### Step1 :
+Create ensemble point clouds(.spbr) from one input point cloud
 ```
 $ ./analyzeIntermediateImages [input_file] [output_path]
 ```
 
-### Example
+#### Step2 :
+Automatically, snapshot all intermediate images by using `spbr_auto_snap`
 ```
-$ ./analyzeIntermediateImages input.ply OUTPUT_DATA/LR10/
+$ $ python spbr_continuously.py [spbr_file_path] [spbr_header_file] [repeat_level]
 ```
 
+#### Step3 :
+Calculate variance(standard deviation) for each corresponding pixels
+```
+$ python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image_resolution]
+```
 
-## Intermediate image (L=100)
-![L100](resources/L100_ensemble.bmp)
-
+<br>
 
 ## Result
-### Standard deviation image
-<center>
-<img src="resources/sd_image.png" width="500">
-</center>
+### Intermediate image (L=100)
+![L100](resources/ensemble.bmp)
 
-### Standard deviation histogram
-<center>
-<img src="resources/sd_histogram.png" width="500">
-</center>
+### Original point cloud (L=1)
+![L1](resources/10per_LR1.bmp)
+
+### Standard deviation image and histogram
+![sd_image](resources/result.png)
+
+### Transition of standard deviation when increasing repeat level
+![sd_image](resources/figure_SD_max.png)
