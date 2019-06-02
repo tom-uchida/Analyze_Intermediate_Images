@@ -146,13 +146,10 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 #     print( int(var_G) )
 
                 # Calc sigma max
-                # NOTE: L or LM or L^2
+                # NOTE: L or L**2
                 # R_sigma_max = var_R / L
                 # G_sigma_max = var_G / L
                 # B_sigma_max = var_B / L
-                # R_sigma_max = var_R / (L*M)
-                # G_sigma_max = var_G / (L*M)
-                # B_sigma_max = var_B / (L*M)
                 R_sigma_max = var_R / (L**2)
                 G_sigma_max = var_G / (L**2)
                 B_sigma_max = var_B / (L**2)

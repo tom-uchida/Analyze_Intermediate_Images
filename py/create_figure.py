@@ -40,9 +40,16 @@ sd_mean = sd_mean_max[:,1]
 sd_max  = sd_mean_max[:,2]
 
 # Creat figure
-# plt.plot(LR, NMSE, color='black')
-# plt.scatter(L, sd_mean, color='black', label='mean')
-plt.scatter(L, sd_max, color='black', label='max')
+
+# max
+# plt.scatter(L, sd_max, color='black', label='max')
+# plt.scatter(L, sd_max, color='black', label='max', marker=",")
+plt.scatter(L, sd_max, color='black', label='max', marker="D")
+
+# mean
+plt.scatter(L, sd_mean, color='black', label='mean')
+
+plt.legend(fontsize=14)
 
 plt.rcParams["mathtext.fontset"] = "stix"
 plt.rcParams["mathtext.rm"] = "Times New Roman"
@@ -50,23 +57,12 @@ plt.rcParams["font.size"] = 14
 plt.xlabel('$L$', fontsize=14)
 plt.ylabel('standard deviation', fontsize=14) # Gray scale
 
-# # draw circle
-# # plt.scatter(RL_original[2], api_original[2], facecolor='none', s=200, edgecolor='black')
-# # plt.scatter(RL_noised[2], api_noised[2], facecolor='none', s=200, edgecolor='black')
-# # plt.scatter(RL_original[11], api_original[11], facecolor='none', s=200, edgecolor='black')
-# # plt.scatter(RL_noised[11], api_noised[11], facecolor='none', s=200, edgecolor='black')
-
-# # Draw text
-# # plt.text(5, 20.5, "20.5", fontsize=14, color='black')
-# # plt.text(10, 1.0, "0.336", fontsize=14, color='black')
-# # plt.text(100, 0.8, "0.0318", fontsize=14, color='black')
-
 plt.xticks([2, 50, 100, 150], fontsize=14)
-# #plt.xticks([0, 10, 100])
-plt.yticks([1, 20, 40, 60], fontsize=14)
-# #plt.ylim([0, 275])
+# plt.yticks([1, 20, 40, 60], fontsize=14) # max
+# plt.yticks([1, 5, 10], fontsize=14) # mean
+plt.yticks([1, 20, 40, 60, 80], fontsize=14) # max
+# plt.yticks([1, 5, 10, 15, 20], fontsize=14) # mean
 
 plt.grid()
-# plt.legend(fontsize=14)
 
 plt.show()
