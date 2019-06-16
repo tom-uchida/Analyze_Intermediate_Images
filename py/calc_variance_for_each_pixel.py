@@ -23,9 +23,9 @@ plt.rcParams["mathtext.rm"] = "Times New Roman"
 # Check arguments
 import sys
 args = sys.argv
-if len(args) != 4:
-    print("\nUSAGE   : $ python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image_resolution]")
-    print("EXAMPLE : $ python calc_variance_for_each_pixel.py ../OUTPUT/LR100/IMAGE_DATA/ 100 1000\n")
+if len(args) != 5:
+    print("\nUSAGE   : $ python calc_variance_for_each_pixel.py [input_images_path] [output_path] [repeat_level] [image_resolution]")
+    print("EXAMPLE : $ python calc_variance_for_each_pixel.py OUTPUT/LR100/IMAGE_DATA/ OUTPUT/LR100/ 100 1000\n")
     sys.exit()
 
 
@@ -66,7 +66,7 @@ def ReadIntermediateImages( _repeat_level, _image_resol, _serial_img_path ):
 
 
 
-def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _repeat_level, _image_resol ):
+def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _repeat_level, _image_resol, _save_path):
     # Set repeat level
     L = _repeat_level
     
@@ -147,12 +147,12 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
 
                 # Calc sigma max
                 # NOTE: L or L**2
-                # R_sigma_max = var_R / L
-                # G_sigma_max = var_G / L
-                # B_sigma_max = var_B / L
-                R_sigma_max = var_R / (L**2)
-                G_sigma_max = var_G / (L**2)
-                B_sigma_max = var_B / (L**2)
+                R_sigma_max = var_R / L
+                G_sigma_max = var_G / L
+                B_sigma_max = var_B / L
+                # R_sigma_max = var_R / (L**2)
+                # G_sigma_max = var_G / (L**2)
+                # B_sigma_max = var_B / (L**2)
 
                 # Calc standard deviation
                 R_sd[h,w] = np.sqrt( R_sigma_max )
@@ -182,14 +182,14 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     # Combine R, G and B arrays
     RGB_sd = np.array([R_sd, G_sd, B_sd])
     RGB_sd_mean = np.mean(RGB_sd, axis=0)
-    np.savetxt("OUTPUT_DATA/RGB_sd_mean.txt", RGB_sd_mean, fmt='%d')
+    np.savetxt(_save_path+"RGB_sd_mean.txt", RGB_sd_mean, fmt='%d')
     RGB_sd_mean_non_bgcolor = RGB_sd_mean[RGB_sd_mean != bg_color]
     
     return RGB_sd_mean, RGB_sd_mean_non_bgcolor
 
 
 
-def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol):
+def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol, _save_path):
     sd_mean = np.mean(_RGB_sd_mean_non_bgcolor)
     sd_max  = np.max(_RGB_sd_mean_non_bgcolor)
     print("\nsd_mean :", sd_mean)
@@ -202,7 +202,8 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol):
     from mpl_toolkits.axes_grid1 import make_axes_locatable
     ax1 = fig.add_subplot(gs[0,0])
     ax1.set_title('SD image')
-    img = ax1.imshow(_RGB_sd_mean, clim=[0,sd_max], cmap='viridis')
+    # img = ax1.imshow(_RGB_sd_mean, clim=[0,sd_max], cmap='viridis')
+    img = ax1.imshow(_RGB_sd_mean, clim=[0,sd_max], cmap='cividis')
     ax1.axis("image")
     divider = make_axes_locatable(ax1)
     ax1_cb = divider.new_horizontal(size="4.5%", pad=0.2)
@@ -231,7 +232,7 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol):
     # plt.figure(figsize=(8, 8))
     # plt.imshow( RGB_sd_mean, cmap='viridis' )
     # plt.colorbar(_RGB_sd_mean, pad=0.1, shrink=0.75, orientation='horizontal')
-    plt.savefig("OUTPUT_DATA/result.png")
+    plt.savefig(_save_path + "result.png")
     print("Saved figure.\n")
 
 
@@ -239,11 +240,11 @@ if __name__ == "__main__":
     print("\n** Intermediate Images :")
 
     # Set repeat level
-    repeat_level = int(args[2])
+    repeat_level = int(args[3])
     print("Repeat Level     :", repeat_level)
 
     # Set image resolution
-    image_resol = int(args[3])
+    image_resol = int(args[4])
     print("Image Resolution :", image_resol)
 
     # Read intermediate images
@@ -251,7 +252,7 @@ if __name__ == "__main__":
     R_pixel_values, G_pixel_values, B_pixel_values = ReadIntermediateImages( repeat_level, image_resol, serial_img_path )
 
     # Calc variance
-    RGB_sd_mean, RGB_sd_mean_non_bgcolor= CalcVariance4EachPixel( R_pixel_values, G_pixel_values, B_pixel_values, repeat_level, image_resol )
+    RGB_sd_mean, RGB_sd_mean_non_bgcolor= CalcVariance4EachPixel( R_pixel_values, G_pixel_values, B_pixel_values, repeat_level, image_resol, args[2])
 
     # Create figure
-    CreateFigure(RGB_sd_mean, RGB_sd_mean_non_bgcolor, image_resol)
+    CreateFigure(RGB_sd_mean, RGB_sd_mean_non_bgcolor, image_resol, args[2])
