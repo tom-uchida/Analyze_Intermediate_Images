@@ -192,8 +192,10 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
 def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol, _save_path):
     sd_mean = np.mean(_RGB_sd_mean_non_bgcolor)
     sd_max  = np.max(_RGB_sd_mean_non_bgcolor)
+    sd_min  = np.min(_RGB_sd_mean_non_bgcolor)
     print("\nsd_mean :", sd_mean)
-    print("sd_max  :", sd_max, "\n")
+    print("sd_max  :", sd_max)
+    print("sd_min  :", sd_min, "\n")
 
     fig = plt.figure(figsize=(6, 10)) # figsize=(width, height)
     gs  = gridspec.GridSpec(2,1)
@@ -201,7 +203,7 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol, _save_pat
     # SD image
     from mpl_toolkits.axes_grid1 import make_axes_locatable
     ax1 = fig.add_subplot(gs[0,0])
-    ax1.set_title('SD image')
+    ax1.set_title('Standard Deviation Image')
     # img = ax1.imshow(_RGB_sd_mean, clim=[0,sd_max], cmap='viridis')
     img = ax1.imshow(_RGB_sd_mean, clim=[0,sd_max], cmap='cividis')
     ax1.axis("image")
@@ -228,6 +230,11 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol, _save_pat
     ax2.axvline(sd_max, color='blue')
     text = "max :\n" + str(round(sd_max,2))
     ax2.text(sd_max, max(hist)*0.9, text, color='blue', fontsize='16')
+
+    # Show SD max
+    ax2.axvline(sd_min, color='green')
+    text = "min :\n" + str(round(sd_min,2))
+    ax2.text(sd_min, max(hist)*0.9, text, color='green', fontsize='16')
 
     # plt.figure(figsize=(8, 8))
     # plt.imshow( RGB_sd_mean, cmap='viridis' )
