@@ -47,8 +47,8 @@ plt.rcParams["mathtext.fontset"] = "stix"
 plt.rcParams["mathtext.rm"] = "Times New Roman"
 plt.rcParams["font.size"] = 14
 
-plt.scatter(L1, sd_mean1, color='black', label='Original', marker="D")
-plt.scatter(L2, sd_mean2, color='black', label='Gaussian noise($\sigma = 5$)')
+plt.scatter(L1, sd_mean1, color='black', label='Ground truth')
+plt.scatter(L2, sd_mean2, color='black', label='Gaussian noise($\sigma = 10$)', marker="D")
 
 plt.legend(fontsize=14)
 plt.xlabel('$L$', fontsize=14)
@@ -56,7 +56,7 @@ plt.ylabel('standard deviation', fontsize=14) # Gray scale
 
 plt.xticks([2, 50, 100, 150], fontsize=14)
 # plt.yticks([1, 20, 40, 60, 80], fontsize=14) # max
-plt.yticks([1, 5, 10, 15, 20], fontsize=14) # mean
+plt.yticks([1, 5, 10, 15, 20, 25, 30], fontsize=14) # mean
 
 plt.grid()
 

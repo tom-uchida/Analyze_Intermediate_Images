@@ -183,6 +183,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     RGB_sd = np.array([R_sd, G_sd, B_sd])
     RGB_sd_mean = np.mean(RGB_sd, axis=0)
     np.savetxt(_save_path+"RGB_sd_mean.txt", RGB_sd_mean, fmt='%d')
+    np.save(_save_path+"RGB_sd_mean.npy", RGB_sd_mean)
     RGB_sd_mean_non_bgcolor = RGB_sd_mean[RGB_sd_mean != bg_color]
     
     return RGB_sd_mean, RGB_sd_mean_non_bgcolor
@@ -221,17 +222,17 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol, _save_pat
     ax2.hist(_RGB_sd_mean_non_bgcolor.ravel(), bins=50, color='black')
     hist, bins = np.histogram(_RGB_sd_mean_non_bgcolor, 50)
 
-    # Show SD mean
+    # Draw SD mean
     ax2.axvline(sd_mean, color='red')
     text = "mean :\n" + str(round(sd_mean,2))
     ax2.text(sd_mean, max(hist)*0.9, text, color='red', fontsize='16')
 
-    # Show SD max
+    # Draw SD max
     ax2.axvline(sd_max, color='blue')
     text = "max :\n" + str(round(sd_max,2))
     ax2.text(sd_max, max(hist)*0.9, text, color='blue', fontsize='16')
 
-    # Show SD max
+    # Draw SD max
     ax2.axvline(sd_min, color='green')
     text = "min :\n" + str(round(sd_min,2))
     ax2.text(sd_min, max(hist)*0.9, text, color='green', fontsize='16')

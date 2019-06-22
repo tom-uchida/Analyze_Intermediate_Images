@@ -42,12 +42,13 @@ sd_max  = sd_mean_max[:,2]
 # Creat figure
 
 # max
-# plt.scatter(L, sd_max, color='black', label='max')
 # plt.scatter(L, sd_max, color='black', label='max', marker=",")
-plt.scatter(L, sd_max, color='black', label='max', marker="D")
+plt.scatter(L, sd_max, color='blue', label='max', marker=",")
+# plt.scatter(L, sd_max, color='black', label='max', marker="D")
 
 # mean
-plt.scatter(L, sd_mean, color='black', label='mean')
+# plt.scatter(L, sd_mean, color='black', label='mean')
+plt.scatter(L, sd_mean, color='red', label='mean')
 
 plt.legend(fontsize=14)
 
