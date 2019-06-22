@@ -23,22 +23,22 @@ python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image
 
 ## Result
 ### Intermediate image (L=100)
-|Coords|Color|
+|Coords Noise|Color Noise|
 |:-:|:-:|
 |![](assets/coords_ensemble.bmp)|![](assets/color_ensemble.bmp)|
 
 
 ### Original point cloud (L=1)
-|Coords|Color|
+|Coords Noise|Color Noise|
 |:-:|:-:|
 |![](assets/coords_LR1.bmp)|![](assets/color_LR1.bmp)|
 
 ### Standard deviation image and histogram
-|Coords|Color|
+|Coords Noise|Color Noise|
 |:-:|:-:|
 |![](assets/coords_figure.png)|![](assets/color_figure.png)|
 
 ### Transition of standard deviation when increasing repeat level
-|Coords|Color|
+|Coords Noise|Color Noise|
 |:-:|:-:|
 |![](assets/coords_SD_mean_max.png)|![](assets/color_SD_mean_max.png)|
