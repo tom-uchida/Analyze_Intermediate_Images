@@ -3,11 +3,20 @@
 <br>
 
 ### Algorithm
-#### Step1 : Create shuffled indices array
-#### Step2 : Create an empty array to store shuffled coordinates
-#### Step3 : Define a pointer to the empty array(created in Step2)
-#### Step4 : Get one point(Vector3f) using the shuffled indices array(created in Step1)
-#### Step5 : Replace the point(got in Step4) using the pointer(defined in Step3)
+Step1：
+Create shuffled indices array
+
+Step2：
+Create an empty array to store shuffled coordinates
+
+Step3：
+Define a pointer to the empty array(created in Step2)
+
+Step4：
+Get one point(Vector3f) using the shuffled indices array(created in Step1)
+
+Step5：
+Replace the point(got in Step4) using the pointer(defined in Step3)
 
 <br>
 
@@ -121,3 +130,8 @@ void DivideRandomly::shuffle() {
                                         m_point->maxExternalCoord() );
 } // End shuffle()
 ```
+
+<br>
+
+### Figure
+![](shuffle.png)
