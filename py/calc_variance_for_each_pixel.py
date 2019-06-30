@@ -83,19 +83,18 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     #   - White : (255, 255, 255)
     #   - Red   : (255,   0,   0)
     #   - Black : (  0,   0,   0) Background
-    bg_color_indices = (_R_pixel_values == bg_color) & (_G_pixel_values == bg_color) & (_B_pixel_values == bg_color)
-    num_of_bgcolor = np.count_nonzero( bg_color_indices )
+    bg_color_bool = (_R_pixel_values == bg_color) & (_G_pixel_values == bg_color) & (_B_pixel_values == bg_color)
+    num_of_bgcolor = np.count_nonzero( bg_color_bool )
     print("(Avg num of bgcolor pixels included in each ensemble) :", int(num_of_bgcolor / _repeat_level), "(pixels)")
 
     # Prepare empty numpy array
-    # Variance(or S.D.) image is a 2D array
+    # Variance(or SD) image is a "2D" array
     R_sd = np.empty( (_image_resol*1, _image_resol*1), float )
     G_sd = np.empty( (_image_resol*1, _image_resol*1), float )
     B_sd = np.empty( (_image_resol*1, _image_resol*1), float )
-    # R_vars = np.empty( (_image_resol*1, _image_resol*1), float )
-    # G_vars = np.empty( (_image_resol*1, _image_resol*1), float )
-    # B_vars = np.empty( (_image_resol*1, _image_resol*1), float )
 
+    sum_M   = 0
+    count_M = 0
     print("\nCalc variance pixel by pixel ...")
     for h in range( _image_resol ):     # height
         for w in range( _image_resol ): # width
@@ -109,7 +108,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
             # Calc variance for each corresponding pixel
             for r in range( L ):
                 # NOTE: DO NOT include if the target pixel is background color
-                if bg_color_indices[h,w,r] != True: # True: bg_color
+                if not bg_color_bool[h,w,r] == True: # True: bg_color
                     # Update value of M
                     M += 1
 
@@ -126,7 +125,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
             # end for r
 
             # Calc average
-            if M != 0:
+            if not M == 0:
                 # Calc avg for sum
                 avg_R   = sum_R  / M
                 avg_G   = sum_G  / M
@@ -159,6 +158,9 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 G_sd[h,w] = np.sqrt( G_sigma_max )
                 B_sd[h,w] = np.sqrt( B_sigma_max )
 
+                sum_M += M
+                count_M += 1
+
             # If target pixel color is background color
             #  (M = 0)
             else:
@@ -168,32 +170,33 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
             # end if
 
             # Show progress
-            if ((h*_image_resol+w)+1)%(_image_resol*_image_resol*0.1) == 0:
-                print(" ", (h*_image_resol+w)+1, "/", _image_resol**2,"pixels done.")
+            processing_ratio = 100.0 * (float)(h*_image_resol+w) / (float)(_image_resol**2)
+            if ( not((h*_image_resol+w) % 100000) and (h*_image_resol+w) > 0 ):
+                print(" ", h*_image_resol+w, "pixels done. (", round(processing_ratio,1), "% )")
 
-            # end for w
-        # end for h
-
-    # Write to txt file
-    # np.savetxt("OUTPUT_DATA/R_sd.txt", R_sd, fmt='%d')
-    # np.savetxt("OUTPUT_DATA/G_sd.txt", G_sd, fmt='%d')
-    # np.savetxt("OUTPUT_DATA/B_sd.txt", B_sd, fmt='%d')
+        # end for w
+    # end for h
 
     # Combine R, G and B arrays
-    RGB_sd = np.array([R_sd, G_sd, B_sd])
+    RGB_sd      = np.array([R_sd, G_sd, B_sd])
     RGB_sd_mean = np.mean(RGB_sd, axis=0)
-    np.savetxt(_save_path+"RGB_sd_mean.txt", RGB_sd_mean, fmt='%d')
     np.save(_save_path+"RGB_sd_mean.npy", RGB_sd_mean)
-    RGB_sd_mean_non_bgcolor = RGB_sd_mean[RGB_sd_mean != bg_color]
+    RGB_sd_mean_non_bgcolor = RGB_sd_mean[np.nonzero(RGB_sd_mean)]
+
+    M_avg = sum_M / count_M
+    print("\navg_M :", M_avg)
     
     return RGB_sd_mean, RGB_sd_mean_non_bgcolor
 
 
 
 def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol, _save_path):
-    sd_mean = np.mean(_RGB_sd_mean_non_bgcolor)
-    sd_max  = np.max(_RGB_sd_mean_non_bgcolor)
-    sd_min  = np.min(_RGB_sd_mean_non_bgcolor)
+    # sd_mean = np.mean(_RGB_sd_mean_non_bgcolor)
+    sd_mean = _RGB_sd_mean[_RGB_sd_mean != 0].mean()
+    # sd_max  = np.max(_RGB_sd_mean_non_bgcolor)
+    sd_max = _RGB_sd_mean[_RGB_sd_mean != 0].max()
+    # sd_min  = np.min(_RGB_sd_mean_non_bgcolor)
+    sd_min = _RGB_sd_mean[_RGB_sd_mean != 0].min()
     print("\nsd_mean :", sd_mean)
     print("sd_max  :", sd_max)
     print("sd_min  :", sd_min, "\n")
@@ -245,11 +248,9 @@ def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol, _save_pat
 
 
 if __name__ == "__main__":
-    print("\n** Intermediate Images :")
-
     # Set repeat level
     repeat_level = int(args[3])
-    print("Repeat Level     :", repeat_level)
+    print("\nRepeat Level     :", repeat_level)
 
     # Set image resolution
     image_resol = int(args[4])
