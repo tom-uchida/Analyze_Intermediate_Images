@@ -93,8 +93,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     G_sd = np.empty( (_image_resol*1, _image_resol*1), float )
     B_sd = np.empty( (_image_resol*1, _image_resol*1), float )
 
-    sum_M   = 0
-    count_M = 0
+    M_array = np.empty( (_image_resol*1, _image_resol*1), float )
     print("\nCalc variance pixel by pixel ...")
     for h in range( _image_resol ):     # height
         for w in range( _image_resol ): # width
@@ -158,8 +157,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 G_sd[h,w] = np.sqrt( G_sigma_max )
                 B_sd[h,w] = np.sqrt( B_sigma_max )
 
-                sum_M += M
-                count_M += 1
+                M_array[h,w] = M
 
             # If target pixel color is background color
             #  (M = 0)
@@ -167,6 +165,7 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
                 R_sd[h,w] = 0
                 G_sd[h,w] = 0
                 B_sd[h,w] = 0
+                M_array[h,w] = 0
             # end if
 
             # Show progress
@@ -183,20 +182,21 @@ def CalcVariance4EachPixel( _R_pixel_values, _G_pixel_values, _B_pixel_values, _
     np.save(_save_path+"RGB_sd_mean.npy", RGB_sd_mean)
     RGB_sd_mean_non_bgcolor = RGB_sd_mean[np.nonzero(RGB_sd_mean)]
 
-    M_avg = sum_M / count_M
-    print("\navg_M :", M_avg)
+    M_mean = np.mean(M_array[M_array != 0])
+    M_max  = np.max(M_array[M_array != 0])
+    M_min  = np.min(M_array[M_array != 0])
+    print("\nM_mean :", M_mean)
+    print("M_max  :", M_max)
+    print("M_min  :", M_min, "\n")
     
     return RGB_sd_mean, RGB_sd_mean_non_bgcolor
 
 
 
 def CreateFigure(_RGB_sd_mean, _RGB_sd_mean_non_bgcolor, _image_resol, _save_path):
-    # sd_mean = np.mean(_RGB_sd_mean_non_bgcolor)
-    sd_mean = _RGB_sd_mean[_RGB_sd_mean != 0].mean()
-    # sd_max  = np.max(_RGB_sd_mean_non_bgcolor)
-    sd_max = _RGB_sd_mean[_RGB_sd_mean != 0].max()
-    # sd_min  = np.min(_RGB_sd_mean_non_bgcolor)
-    sd_min = _RGB_sd_mean[_RGB_sd_mean != 0].min()
+    sd_mean = np.mean(_RGB_sd_mean_non_bgcolor)
+    sd_max  = np.max(_RGB_sd_mean_non_bgcolor)
+    sd_min  = np.min(_RGB_sd_mean_non_bgcolor)
     print("\nsd_mean :", sd_mean)
     print("sd_max  :", sd_max)
     print("sd_min  :", sd_min, "\n")

@@ -1,4 +1,4 @@
-# create_figure.py
+# create_figure_SD.py
 #   Tomomasa Uchida
 #   2019/05/29
 
@@ -20,8 +20,8 @@ plt.rc('lines', linewidth=2)
 import sys
 args = sys.argv
 if len(args) != 2:
-    print("\nUSAGE   : $ python calc_variance_for_each_pixel.py [csv_file_path]")
-    print("EXAMPLE : $ python calc_variance_for_each_pixel.py OUTPUT/funehoko/SD_mean_max.csv\n")
+    print("\nUSAGE   : $ python create_figure_SD.py [csv_file_path]")
+    print("EXAMPLE : $ python create_figure_SD.py OUTPUT/funehoko/SD_mean_max.csv\n")
     sys.exit()
 
 
