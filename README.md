@@ -42,3 +42,10 @@ python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image
 |Coords Noise|Color Noise|
 |:-:|:-:|
 |![](assets/coords_SD_mean_max.png)|![](assets/color_SD_mean_max.png)|
+
+***
+
+### 
+|M_mean and M_max|M/L|
+|:-:|:-:|
+|![](assets/M_mean_max.png)|![](assets/M/L.png)|
