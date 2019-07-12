@@ -48,4 +48,4 @@ python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image
 ### 
 |M_mean and M_max|M/L|
 |:-:|:-:|
-|![](assets/M_mean_max.png)|![](assets/M/L.png)|
+|![](assets/M_mean_max.png)|![](assets/ML.png)|
