@@ -15,29 +15,33 @@ if len(args) != 3:
     sys.exit()
 
 def main():
-    repeat_level = args[2]
+    repeat_level = int(args[2])
 
     # User input
-    print('Please input start pixel coords.')
-    start_x = input('start_x  >>')
-    start_y = input('start_y  >>')
-    print('\n')
-    print('Please input end pixel coords.')
-    end_x   = input('end_x    >>')
-    end_y   = input('end_y    >>')
+    # print('Please input width pixel coords :')
+    # start_w = input('   start_w  >> ')
+    # end_w   = input('     end_w  >> ')
+    # print('\nPlease input height pixel coords :')
+    # start_h = input('   start_h  >> ')
+    # end_h   = input('     end_h  >> ')
+
+    start_w, end_w = 30,180
+    start_h, end_h = 50,200
 
     # Crop all images
     for i in range(repeat_level):
         # Read image
-        img_in = cv2.imread( args[1]+"ensemble{0:03d}.bmp".format(i) )
+        img_in = cv2.imread( args[1]+"ensemble"+str(i+1)+".bmp" )
 
         # Crop image
-        img_cropped = img_in[int(start_y):int(end_y), int(start_x):int(end_x)]
+        img_cropped = img_in[int(start_h):int(end_h), int(start_w):int(end_w)]
 
         # Write image
-        out_name = args[1] + "cropped{0:03d}.png"
-        cv2.imwrite( out_name.format(i), img_cropped )
+        out_name = args[1] + "cropped"+str(i+1)+".png"
+        cv2.imwrite( out_name, img_cropped )
     # end for i
+
+    print("\nDone.")
 
 if __name__ == "__main__":
     main()

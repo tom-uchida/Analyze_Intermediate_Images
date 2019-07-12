@@ -51,6 +51,7 @@ def ReadIntermediateImages( _repeat_level, _image_resol, _serial_img_path ):
     for i in range( _repeat_level ):
         # Read each ensemble image
         tmp_image_RGB = ReadImage( _serial_img_path + "ensemble"+str(i+1)+".bmp" )
+        # tmp_image_RGB = ReadImage( _serial_img_path + "cropped"+str(i+1)+".png" )
 
         # Split into RGB and add to numpy array
         R_pixel_values[:,:,i] = tmp_image_RGB[:,:,0] # R

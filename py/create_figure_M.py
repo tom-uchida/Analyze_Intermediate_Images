@@ -35,20 +35,21 @@ print(M_mean_max.shape)
 print(M_mean_max)
 
 # Get each column
-L       = M_mean_max[:,0]
+L      = M_mean_max[:,0]
 M_mean = M_mean_max[:,1]
 M_max  = M_mean_max[:,2]
+ML     = M_mean / L
 
 # Creat figure
 
 # max
-# plt.scatter(L, sd_max, color='black', label='max', marker=",")
 plt.scatter(L, M_max, color='blue', label='max', marker=",")
-# plt.scatter(L, sd_max, color='black', label='max', marker="D")
 
 # mean
-# plt.scatter(L, sd_mean, color='black', label='mean')
 plt.scatter(L, M_mean, color='red', label='mean')
+
+# M/L
+# plt.scatter(L, ML, color='black')
 
 plt.legend(fontsize=14)
 
@@ -57,9 +58,10 @@ plt.rcParams["mathtext.rm"] = "Times New Roman"
 plt.rcParams["font.size"] = 14
 plt.xlabel('$L$', fontsize=14)
 plt.ylabel('$M$', fontsize=14) # Gray scale
+# plt.ylabel(r'$\frac{M}{L}$', fontsize=20) # Gray scale
 
 plt.xticks([2, 50, 100, 150], fontsize=14)
-plt.yticks([1, 10, 20, 30, 40, 50], fontsize=14) # max
+plt.yticks([0, 5, 10, 15, 20], fontsize=14) # max
 
 plt.grid()
 
