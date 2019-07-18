@@ -43,25 +43,26 @@ ML     = M_mean / L
 # Creat figure
 
 # max
-plt.scatter(L, M_max, color='blue', label='max', marker=",")
+# plt.scatter(L, M_max, color='blue', label='max', marker=",")
 
 # mean
-plt.scatter(L, M_mean, color='red', label='mean')
+# plt.scatter(L, M_mean, color='red', label='mean')
 
 # M/L
-# plt.scatter(L, ML, color='black')
+plt.scatter(L, ML, color='black')
 
 plt.legend(fontsize=14)
 
-plt.rcParams["mathtext.fontset"] = "stix"
+plt.rcParams["mathtext.fontset"] = "cm"
 plt.rcParams["mathtext.rm"] = "Times New Roman"
 plt.rcParams["font.size"] = 14
 plt.xlabel('$L$', fontsize=14)
-plt.ylabel('$M$', fontsize=14) # Gray scale
-# plt.ylabel(r'$\frac{M}{L}$', fontsize=20) # Gray scale
+# plt.ylabel('$M$', fontsize=14) # Gray scale
+plt.ylabel('$M / L$', fontsize=14) # Gray scale
 
 plt.xticks([2, 50, 100, 150], fontsize=14)
-plt.yticks([0, 5, 10, 15, 20], fontsize=14) # max
+# plt.yticks([0, 5, 10, 15, 20], fontsize=14) # max
+plt.yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0], fontsize=14) # max
 
 plt.grid()
 
