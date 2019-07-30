@@ -43,25 +43,26 @@ sd_max  = sd_mean_max[:,2]
 
 # max
 # plt.scatter(L, sd_max, color='black', label='max', marker=",")
-plt.scatter(L, sd_max, color='blue', label='max', marker=",")
+plt.scatter(L, sd_max, color='blue', label='Max', marker=",")
 # plt.scatter(L, sd_max, color='black', label='max', marker="D")
 
 # mean
 # plt.scatter(L, sd_mean, color='black', label='mean')
-plt.scatter(L, sd_mean, color='red', label='mean')
+plt.scatter(L, sd_mean, color='red', label='Mean')
 
 plt.legend(fontsize=14)
 
-plt.rcParams["mathtext.fontset"] = "stix"
+plt.rcParams["mathtext.fontset"] = "cm"
 plt.rcParams["mathtext.rm"] = "Times New Roman"
 plt.rcParams["font.size"] = 14
 plt.xlabel('$L$', fontsize=14)
-plt.ylabel('standard deviation', fontsize=14) # Gray scale
+plt.ylabel('Standard Deviation', fontsize=14) # Gray scale
 
 plt.xticks([2, 50, 100, 150], fontsize=14)
 # plt.yticks([1, 20, 40, 60], fontsize=14) # max
 # plt.yticks([1, 5, 10], fontsize=14) # mean
-plt.yticks([1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], fontsize=14) # max
+# plt.yticks([1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], fontsize=14) # max
+plt.yticks([1, 20, 40, 60, 80, 100], fontsize=14) # max
 # plt.yticks([1, 5, 10, 15, 20], fontsize=14) # mean
 
 plt.grid()
