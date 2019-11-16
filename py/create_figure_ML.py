@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
-plt.style.use('seaborn-white')
+# plt.style.use('seaborn-white')
+plt.style.use('bmh')
 
 from matplotlib import cycler
 colors = cycler('color', ['#EE6666', '#3388BB', '#9988DD', '#EECC55', '#88BB44', '#FFBBBB'])
@@ -52,7 +53,7 @@ ML     = M_mean / L
 # M/L
 plt.scatter(L, ML, color='black')
 
-plt.legend(fontsize=14)
+# plt.legend(fontsize=14)
 
 plt.rcParams["mathtext.fontset"] = "cm"
 plt.rcParams["mathtext.rm"] = "Times New Roman"
