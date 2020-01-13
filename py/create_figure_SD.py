@@ -4,17 +4,21 @@
 
 import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
-plt.style.use('seaborn-white')
+plt.style.use('bmh')
 
-from matplotlib import cycler
-colors = cycler('color', ['#EE6666', '#3388BB', '#9988DD', '#EECC55', '#88BB44', '#FFBBBB'])
-plt.rc('axes', facecolor='#E6E6E6', edgecolor='none', axisbelow=True, grid=False, prop_cycle=colors)
-plt.rc('grid', color='w', linestyle='solid')
-plt.rc('patch', edgecolor='#E6E6E6')
-plt.rc('lines', linewidth=2)
+# from matplotlib import cycler
+# colors = cycler('color', ['#EE6666', '#3388BB', '#9988DD', '#EECC55', '#88BB44', '#FFBBBB'])
+# plt.rc('axes', facecolor='#E6E6E6', edgecolor='none', axisbelow=True, grid=False, prop_cycle=colors)
+# plt.rc('grid', color='w', linestyle='solid')
+# plt.rc('patch', edgecolor='#E6E6E6')
+# plt.rc('lines', linewidth=2)
 # plt.figure(figsize=(8,6))
+
+plt.rcParams["mathtext.rm"] = "Times New Roman"
+# plt.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams["mathtext.fontset"] = "cm"
+# plt.rcParams["font.size"] = 14
 
 # Check arguments
 import sys
@@ -40,31 +44,21 @@ sd_mean = sd_mean_max[:,1]
 sd_max  = sd_mean_max[:,2]
 
 # Creat figure
+plt.figure(figsize=(9, 6)) # figsize=(width, height)
 
-# max
-# plt.scatter(L, sd_max, color='black', label='max', marker=",")
-plt.scatter(L, sd_max, color='blue', label='Max', marker=",")
-# plt.scatter(L, sd_max, color='black', label='max', marker="D")
+# Max
+plt.scatter(L, sd_max, color='red', label='Max', marker=",", s=100)
 
-# mean
-# plt.scatter(L, sd_mean, color='black', label='mean')
-plt.scatter(L, sd_mean, color='red', label='Mean')
+# Mean
+plt.scatter(L, sd_mean, color='black', label='Mean', s=100)
 
-plt.legend(fontsize=14)
+plt.xlabel('$L$', fontsize=24)
+plt.ylabel('Standard Deviation per pixel', fontsize=24)
 
-plt.rcParams["mathtext.fontset"] = "cm"
-plt.rcParams["mathtext.rm"] = "Times New Roman"
-plt.rcParams["font.size"] = 14
-plt.xlabel('$L$', fontsize=14)
-plt.ylabel('Standard Deviation', fontsize=14) # Gray scale
+plt.xticks([2, 50, 100, 150], fontsize=18)
+plt.yticks([1, 20, 40, 60, 80, 100], fontsize=18)
 
-plt.xticks([2, 50, 100, 150], fontsize=14)
-# plt.yticks([1, 20, 40, 60], fontsize=14) # max
-# plt.yticks([1, 5, 10], fontsize=14) # mean
-# plt.yticks([1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100], fontsize=14) # max
-plt.yticks([1, 20, 40, 60, 80, 100], fontsize=14) # max
-# plt.yticks([1, 5, 10, 15, 20], fontsize=14) # mean
-
-plt.grid()
+# plt.grid()
+plt.legend(fontsize=20)
 
 plt.show()
