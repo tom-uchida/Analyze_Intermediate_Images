@@ -127,7 +127,7 @@ void DivideRandomly::shuffle() {
 } // End shuffle()
 
 // Write to spbr file
-void DivideRandomly::writeToSPBRFile( std::string _out_file_path ) {
+void DivideRandomly::write2SPBRFile( std::string _out_file_path ) {
     // const kvs::PointObject* object = new kvs::PointObject( *m_ply );
     bool hasNormal = false;
     bool hasColor  = false;
@@ -139,7 +139,7 @@ void DivideRandomly::writeToSPBRFile( std::string _out_file_path ) {
 
     for ( size_t j = 0; j < m_repeat_level; j++ ) {
         // Set output file name
-        std::string out_spbr_file_name = _out_file_path;
+        std::string out_spbr_file_name = _out_file_path + "/";
         std::ostringstream oss;
         oss << "ensemble";
         oss << j+1;
@@ -182,12 +182,11 @@ void DivideRandomly::writeToSPBRFile( std::string _out_file_path ) {
                 b = colors[ 3*j*m_num_of_points_in_each_ensemble + 3*i+2 ];
             }
 
+            // Write to output .spbr file
             fout    << x   << " " << y  << " " << z  << " "
                     << nx  << " " << ny << " " << nz << " "
                     << r   << " " << g  << " " << b  << " " 
                     << std::endl;
-
-            
         } // end for
 
         fout.close();

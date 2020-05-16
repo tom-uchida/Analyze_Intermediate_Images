@@ -18,7 +18,7 @@ ImportPointClouds::ImportPointClouds( void ): m_hasFace( false ) {
 ImportPointClouds::ImportPointClouds( char *filename ): m_hasFace( false ) {
     classification( filename );
 }
-                                              
+
 int ImportPointClouds::breakWord( char* buf, std::string *str ) {                                             
     char* data;                                 
     int n = 0;                                  
@@ -28,7 +28,7 @@ int ImportPointClouds::breakWord( char* buf, std::string *str ) {
         data = strtok( NULL, " \t" );             
         n++;                                      
     }                                           
-  
+
     return n;                                   
 }
 
@@ -37,7 +37,7 @@ void ImportPointClouds::classification( char* filename ) {
     if( !fin ) {
         std::cout << "ERROR: Cannot Open File: " << filename << std::endl;
         exit(1);
-    } 
+    }
 
     SuperClass::setPolygonType( kvs::PolygonObject::UnknownPolygonType );
     SuperClass::setColorType( kvs::PolygonObject::VertexColor );
@@ -53,11 +53,11 @@ void ImportPointClouds::classification( char* filename ) {
     if( !strncmp( word[0].c_str(), "ply", 3 ) ) {
         std::cout << "PLY file reading....." << std::endl;
         kvs::PolygonObject* ply = new plyRead( filename, m_hasFace );
-      
+
         SuperClass::setCoords( ply->coords() );
         SuperClass::setNormals( ply->normals() ); 
         SuperClass::setColors( ply->colors() );
-      
+
         numVert = ply->numberOfVertices();
         if( m_hasFace ) {
             SuperClass::setConnections( ply->connections() );

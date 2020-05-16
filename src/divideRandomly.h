@@ -10,7 +10,7 @@ public:
 	DivideRandomly( const kvs::PolygonObject* _ply, const size_t _repeat_level );
 
     void shuffle();
-    void writeToSPBRFile( std::string _out_file_path );
+    void write2SPBRFile( std::string _out_file_path );
 
 private:
     const kvs::PolygonObject* m_ply;
