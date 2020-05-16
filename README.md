@@ -4,7 +4,7 @@
 #### Step1 :
 Create ensemble point clouds(.spbr) from one input point cloud
 ```
-./analyzeIntermediateImages [input_file] [output_path]
+$ ./analyzeIntermediateImages [input_file] [output_path]
 
 Input repeat level (the default repeat level is 1) : 10
 Num. of input points : 1122011
@@ -29,13 +29,13 @@ File export of all ensembles is complete.
 #### Step2 :
 Automatically, snapshot all intermediate images by using `spbr_auto_snap`
 ```
-python spbr_continuously.py [spbr_file_path] [spbr_header_file] [repeat_level]
+$ python spbr_continuously.py [spbr_file_path] [spbr_header_file] [repeat_level]
 ```
 
 #### Step3 :
 Calculate variance(standard deviation) for each corresponding pixels
 ```
-python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image_resolution]
+$ python calc_variance_for_each_pixel.py [input_images_path] [repeat_level] [image_resolution]
 ```
 
 <br>
