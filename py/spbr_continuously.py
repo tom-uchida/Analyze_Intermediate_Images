@@ -21,12 +21,13 @@ spbr_header_file    = args[2]
 num_of_executions   = int(args[3])
 for i in range(num_of_executions):
     try:
-        file_name = spbr_file_path + "ensemble" + str(i+1) + ".spbr"
-        res = subprocess.check_call( ["spbr_auto_snap", spbr_header_file, file_name] )
-        # time.sleep(1)
+        # Save image
+        spbr_file_name = spbr_file_path + "ensemble"+str(i+1)+".spbr"
+        subprocess.run( ["spbr_auto_snap", spbr_header_file, spbr_file_name] )
+
+        # Delete .spbr file
+        subprocess.run( ["rm", spbr_file_name] )
 
     except:
         print("ERROR")
 
-# spbr_file_path = spbr_file_path+"ensemble1.spbr"
-# subprocess.run( ["rm", spbr_file_path] )
