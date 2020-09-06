@@ -4,21 +4,12 @@
 
 import numpy as np
 import pandas as pd
+
 import matplotlib.pyplot as plt
 plt.style.use('bmh')
-
-# from matplotlib import cycler
-# colors = cycler('color', ['#EE6666', '#3388BB', '#9988DD', '#EECC55', '#88BB44', '#FFBBBB'])
-# plt.rc('axes', facecolor='#E6E6E6', edgecolor='none', axisbelow=True, grid=False, prop_cycle=colors)
-# plt.rc('grid', color='w', linestyle='solid')
-# plt.rc('patch', edgecolor='#E6E6E6')
-# plt.rc('lines', linewidth=2)
-# plt.figure(figsize=(8,6))
-
-plt.rcParams["mathtext.rm"] = "Times New Roman"
-# plt.rcParams['font.family'] = 'Times New Roman'
 plt.rcParams["mathtext.fontset"] = "cm"
-# plt.rcParams["font.size"] = 14
+plt.rcParams["mathtext.rm"] = "Times New Roman"
+plt.rcParams["font.size"] = 14
 
 # Check arguments
 import sys
@@ -47,7 +38,8 @@ sd_max  = sd_mean_max[:,2]
 plt.figure(figsize=(9, 6)) # figsize=(width, height)
 
 # Max
-plt.scatter(L, sd_max, color='red', label='Max', marker=",", s=100)
+plt.scatter(L, sd_max, color="red", label='Max', marker=",", s=100)
+#24217D
 
 # Mean
 plt.scatter(L, sd_mean, color='black', label='Mean', s=100)
