@@ -35,7 +35,7 @@ sd_mean = sd_mean_max[:,1]
 sd_max  = sd_mean_max[:,2]
 
 # Creat figure
-plt.figure(figsize=(9, 6)) # figsize=(width, height)
+plt.figure(figsize=(10, 8)) # figsize=(width, height)
 
 # Max
 plt.scatter(L, sd_max, color="red", label='Max', marker=",", s=100)
@@ -45,7 +45,7 @@ plt.scatter(L, sd_max, color="red", label='Max', marker=",", s=100)
 plt.scatter(L, sd_mean, color='black', label='Mean', s=100)
 
 plt.xlabel('$L$', fontsize=24)
-plt.ylabel('Standard Deviation per pixel', fontsize=24)
+plt.ylabel('Pixel-wise standard deviation', fontsize=24)
 
 plt.xticks([2, 50, 100, 150], fontsize=18)
 plt.yticks([1, 20, 40, 60, 80, 100], fontsize=18)
