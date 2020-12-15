@@ -45,10 +45,10 @@ plt.scatter(L, sd_max, color="red", label='Max', marker=",", s=100)
 plt.scatter(L, sd_mean, color='black', label='Mean', s=100)
 
 plt.xlabel('$L$', fontsize=24)
-plt.ylabel('Pixel-wise standard deviation', fontsize=24)
+plt.ylabel('Standard Deviation', fontsize=24)
 
-plt.xticks([2, 50, 100, 150], fontsize=18)
-plt.yticks([1, 20, 40, 60, 80, 100], fontsize=18)
+plt.xticks([2, 50, 100, 150], fontsize=20)
+plt.yticks([0, 20, 40, 60, 80, 100], fontsize=20)
 
 # plt.grid()
 plt.legend(fontsize=20)
